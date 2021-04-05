@@ -1,0 +1,81 @@
+---
+title: "Interactive Floodplain Habitat Map"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{floodplain_habitat_map}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r,
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7, 
+  fig.height = 6
+)
+```
+
+```{r setup, include=FALSE}
+library(DSMhabitat)
+```
+
+### Map of Modeled Floodplain Spawning and Rearing Habitat
+
+The map below displays Spawning and Rearing floodplain habitat for Chinook salmon in the Central Valley. 
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results='asis'}
+
+library(leaflet)
+library(widgetframe)
+library(leaflet)
+library(rgdal)
+library(tidyverse)
+library(readxl)
+
+setwd("C:/Users/Erin Cain/Documents/Git/DSMhabitat")
+salmonid_extents <- readOGR("data-raw/rearing_spatial_data/salmonid_habitat_extents/salmonid_habitat_extents.shp", 
+                            stringsAsFactors = FALSE) %>%
+  spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
+
+sps <- subset(salmonid_extents, Species == 'Spring Run Chinook' & Habitat == 'spawning')
+spr <- subset(salmonid_extents, Species == 'Spring Run Chinook' & Habitat == 'rearing')
+fs <- subset(salmonid_extents, Species == 'Fall Run Chinook' & Habitat == 'spawning')
+fr <- subset(salmonid_extents, Species == 'Fall Run Chinook' & Habitat == 'rearing')
+sts <- subset(salmonid_extents, Species == 'Steelhead' & Habitat == 'spawning')
+str <- subset(salmonid_extents, Species == 'Steelhead' & Habitat == 'rearing')
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results='asis'}
+labels <- sprintf("River: <strong>%s</strong><br/> Source: %s",
+                    salmonid_extents$River, salmonid_extents$Source) %>% lapply(htmltools::HTML)
+leaflet() %>% 
+      addProviderTiles(providers$Esri.WorldTopoMap, group = "Map") %>% 
+      addProviderTiles(providers$Esri.WorldImagery, group = "Satellite") %>%
+      addPolylines(data = str, group = 'Steelhead Rearing', label = labels,
+                   color = '#5e3c99', opacity = .8, weight = 3) %>%
+      addPolylines(data = sts, group = 'Steelhead Spawning', label = labels,
+                   color = '#e66101', opacity = 1, weight = 3) %>%
+      addPolylines(data = spr, group = 'Spring Run Rearing', label = labels,
+                   color = '#5e3c99', opacity = .8, weight = 3) %>% 
+      addPolylines(data = sps, group = 'Spring Run Spawning', label = labels,
+                   color = '#e66101', opacity = 1, weight = 3) %>% 
+      addPolylines(data = fr, group = 'Fall Run Rearing', label = labels,
+                   color = '#5e3c99', opacity = .8, weight = 3) %>% 
+      addPolylines(data = fs, group = 'Fall Run Spawning', label = labels,
+                   color = '#e66101', opacity = 1, weight = 3) %>% 
+      addLayersControl(
+        baseGroups = c("Map", "Satellite"),
+        overlayGroups = c('Fall Run Rearing', 'Fall Run Spawning', 
+                          'Spring Run Rearing','Spring Run Spawning', 
+                          'Steelhead Rearing', 'Steelhead Spawning')) %>% 
+      hideGroup('Spring Run Spawning') %>%
+      hideGroup('Spring Run Rearing') %>%
+      hideGroup('Steelhead Spawning') %>%
+      hideGroup('Steelhead Rearing') %>%
+      addLegend(colors = c('#5e3c99', '#e66101'), labels = c('rearing', 'spawning'),
+                position = 'topleft', title = 'Habitat Type') %>% 
+      setView(lat = 40.61158, lng = -122.4461, zoom = 10)
+
+```

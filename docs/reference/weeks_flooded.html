@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Duration of Floodplain Inundation — weeks_flooded • DSMhabitat</title>
+<title>Floodplain Habitat Activation Duration — weeks_flooded • DSMhabitat</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Duration of Floodplain Inundation — weeks_flooded" />
-<meta property="og:description" content="Function returns number of weeks of floodplain inundation given a flow for a watershed" />
+<meta property="og:title" content="Floodplain Habitat Activation Duration — weeks_flooded" />
+<meta property="og:description" content="The 1980-2000 floodplain rearing habitat event duration in number of weeks" />
 
 
 
@@ -81,8 +81,20 @@
         <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../articles/floodplain-modeling.html">Articles</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/floodplain-modeling.html">Floodplain Modeling Methodology</a>
+    </li>
+    <li>
+      <a href="../articles/floodplain_habitat_map.html">Map of Floodplain Habitat</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -91,7 +103,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/CVPIA-OSC/DSMhabitat">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -108,43 +120,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Duration of Floodplain Inundation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/CVPIA-OSC/DSMhabitat/blob/master/R/utils.R'><code>R/utils.R</code></a></small>
+    <h1>Floodplain Habitat Activation Duration</h1>
+    <small class="dont-index">Source: <a href='https://github.com/CVPIA-OSC/DSMhabitat/blob/master/R/data.R'><code>R/data.R</code></a></small>
     <div class="hidden name"><code>weeks_flooded.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Function returns number of weeks of floodplain inundation given a flow for a watershed</p>
+    <p>The 1980-2000 floodplain rearing habitat event duration in number of weeks</p>
     </div>
 
-    <pre class="usage"><span class='fu'>weeks_flooded</span><span class='op'>(</span><span class='va'>ws</span>, <span class='va'>flow_cfs</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='va'>weeks_flooded</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>ws</th>
-      <td><p>name of CVPIA watershed</p></td>
-    </tr>
-    <tr>
-      <th>flow_cfs</th>
-      <td><p>monthly mean flow in cubic feet per second</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>integer value for number of weeks</p>
+    <p>a 3 dimensional array [31 watersheds, 12 months, 21 years]</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>These relationships between number of days inundated and the mean monthly flow
-are stored in <code><a href='weeks_inundated.html'>weeks_inundated</a></code> and referenced by this function.
-For watersheds without a defined relationship, a two week inundation duration is assumed.</p>
+    <p>Values created using the function <code><a href='get_weeks_flooded.html'>get_weeks_flooded</a></code></p>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>weeks_flooded</span><span class='op'>(</span><span class='st'>'Yuba River'</span>, <span class='fl'>900</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 4</div><div class='input'>
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

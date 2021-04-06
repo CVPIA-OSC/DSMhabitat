@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bypass Flow to Habitat Area Relationships — bypass • DSMhabitat</title>
+<title>Bypass Habitat Area — bypass • DSMhabitat</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,8 @@
 
 
 
-<meta property="og:title" content="Bypass Flow to Habitat Area Relationships — bypass" />
-<meta property="og:description" content="A dataset containing the suitable habitat area in square meters as a
-function of flow in cubic feet per second." />
+<meta property="og:title" content="Bypass Habitat Area — bypass" />
+<meta property="og:description" content="The 1980-2000 suitable juvenile rearing habitat area in square meters" />
 
 
 
@@ -82,8 +81,20 @@ function of flow in cubic feet per second." />
         <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li>
-  <a href="../articles/floodplain-modeling.html">Articles</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Articles
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="../articles/floodplain-modeling.html">Floodplain Modeling Methodology</a>
+    </li>
+    <li>
+      <a href="../articles/floodplain_habitat_map.html">Map of Floodplain Habitat</a>
+    </li>
+  </ul>
 </li>
 <li>
   <a href="../news/index.html">News</a>
@@ -92,7 +103,7 @@ function of flow in cubic feet per second." />
       <ul class="nav navbar-nav navbar-right">
         <li>
   <a href="https://github.com/CVPIA-OSC/DSMhabitat">
-    <span class="fa fa-github fa-lg"></span>
+    <span class="fas fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -109,66 +120,50 @@ function of flow in cubic feet per second." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Bypass Flow to Habitat Area Relationships</h1>
+    <h1>Bypass Habitat Area</h1>
     <small class="dont-index">Source: <a href='https://github.com/CVPIA-OSC/DSMhabitat/blob/master/R/data.R'><code>R/data.R</code></a></small>
     <div class="hidden name"><code>bypass.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A dataset containing the suitable habitat area in square meters as a
-function of flow in cubic feet per second.</p>
+    <p>The 1980-2000 suitable juvenile rearing habitat area in square meters</p>
     </div>
 
-    <pre class="usage"><span class='va'>yolo_bypass_habitat</span>
+    <pre class="usage"><span class='va'>sutter_habitat</span>
 
-<span class='va'>sutter_bypass_habitat</span></pre>
+<span class='va'>yolo_habitat</span></pre>
 
 
-    <h2 class="hasAnchor" id="source"><a class="anchor" href="#source"></a>Source</h2>
+    <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p><a href='http://cvpia-habitat-docs-markdown.s3-website-us-west-2.amazonaws.com/watershed/bypasses.html'>Sutter and Yolo Bypass Modeling Details</a></p>
-    <h2 class="hasAnchor" id="yolo-bypass"><a class="anchor" href="#yolo-bypass"></a>Yolo Bypass</h2>
+    <p>a 2 dimensional array [12 months, 21 years]</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    
-
-<dl>
-  <dt>flow_cfs</dt><dd><p>integer flow value in cubic feet per second</p></dd>
-  <dt>Yolo Bypass 1</dt><dd><p>suitable rearing area in square meters in the Yolo Bypass, Fremont Weir to Sacramento Weir</p></dd>
-  <dt>Yolo Bypass 2</dt><dd><p>suitable rearing area in square meters in the Yolo Bypass below Sacramento Weir</p></dd>
-
-</dl>
-
+    <p>Calculated using the function <code><a href='set_bypass_habitat.html'>set_bypass_habitat</a></code></p>
     <h2 class="hasAnchor" id="sutter-bypass"><a class="anchor" href="#sutter-bypass"></a>Sutter Bypass</h2>
 
     
 
-<dl>
-  <dt>flow_cfs</dt><dd><p>integer flow value in cubic feet per second</p></dd>
-  <dt>Sutter Bypass 1</dt><dd><p>suitable rearing area in square meters in the Sutter Bypass, to Moulton Weir</p></dd>
-  <dt>Sutter Bypass 2</dt><dd><p>suitable rearing area in square meters in the Sutter Bypass, to Colusa Weir</p></dd>
-  <dt>Sutter Bypass 3</dt><dd><p>suitable rearing area in square meters in the Sutter Bypass, to Tisdale Weir</p></dd>
-  <dt>Sutter Bypass 4</dt><dd><p>suitable rearing area in square meters in the Sutter Bypass below Tisdale Weir</p></dd>
 
-</dl>
+<p>The area within Sutter Bypass is the summation of the four sections listed below</p><ul>
+<li><p>sutter1 = to Moulton Weir</p></li>
+<li><p>sutter2 = to Colusa Weir</p></li>
+<li><p>sutter3 = to Tisdale Weir</p></li>
+<li><p>sutter4 = below Tisdale Weir</p></li>
+</ul>
+
+    <h2 class="hasAnchor" id="yolo-bypass"><a class="anchor" href="#yolo-bypass"></a>Yolo Bypass</h2>
+
+    
 
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='va'>yolo_bypass_habitat</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 41 x 3</span><span>
-#&gt;    flow_cfs `Yolo Bypass 1` `Yolo Bypass 2`
-#&gt;       </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>       10          </span><span style='text-decoration: underline;'>27</span><span>932.         </span><span style='text-decoration: underline;'>253</span><span>808.
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>       20         </span><span style='text-decoration: underline;'>307</span><span>501.         </span><span style='text-decoration: underline;'>702</span><span>708.
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>       30         </span><span style='text-decoration: underline;'>425</span><span>135.         </span><span style='text-decoration: underline;'>905</span><span>245.
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>       40         </span><span style='text-decoration: underline;'>521</span><span>795.         </span><span style='text-decoration: underline;'>971</span><span>859.
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>       50         </span><span style='text-decoration: underline;'>600</span><span>826.        1</span><span style='text-decoration: underline;'>044</span><span>463.
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>       60         </span><span style='text-decoration: underline;'>642</span><span>940.        1</span><span style='text-decoration: underline;'>136</span><span>821.
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>       70         </span><span style='text-decoration: underline;'>640</span><span>828.        1</span><span style='text-decoration: underline;'>096</span><span>337.
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>       80         </span><span style='text-decoration: underline;'>606</span><span>158.        1</span><span style='text-decoration: underline;'>202</span><span>895.
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>       90         </span><span style='text-decoration: underline;'>622</span><span>189.        1</span><span style='text-decoration: underline;'>292</span><span>838.
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>      100         </span><span style='text-decoration: underline;'>593</span><span>637.        1</span><span style='text-decoration: underline;'>375</span><span>864.
-#&gt; </span><span style='color: #949494;'># … with 31 more rows</span><span></div><div class='input'>
-</div></span></pre>
+<p>The area within Yolo Bypass is the summation of the two sections listed below</p>
+<ul>
+<li><p>yolo1 = Fremont Weir to Sacramento Weir</p></li>
+<li><p>yolo2 = below Sacramento Weir</p></li>
+</ul>
+
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

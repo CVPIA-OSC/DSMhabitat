@@ -1,9 +1,10 @@
-pandoc: 2.3.1
+pandoc: '2.12'
 pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   floodplain-modeling: floodplain-modeling.html
-last_built: 2020-10-27T18:59Z
+  floodplain_habitat_map: floodplain_habitat_map.html
+last_built: 2021-04-06T18:47Z
 urls:
   reference: https://CVPIA-OSC.github.io/DSMhabitat//reference
   article: https://CVPIA-OSC.github.io/DSMhabitat//articles

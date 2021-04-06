@@ -46,7 +46,11 @@ navbar:
   - text: 'Reference'
     href: reference/index.html
   - text: 'Articles'
-    href: articles/floodplain-modeling.html
+    menu: 
+      - text: 'Floodplain Modeling Methodology'
+        href: articles/floodplain-modeling.html
+      - text: 'Map of Floodplain Habitat'
+        href: articles/floodplain_habitat_map.html
   - text: 'News'
     href: news/index.html
   right:

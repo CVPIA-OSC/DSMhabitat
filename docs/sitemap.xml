@@ -10,10 +10,31 @@
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/apply_suitability.html</loc>
   </url>
   <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/bypass.html</loc>
+  </url>
+  <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/bypass_habitat.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/delta_habitat.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/delta_prop_high_predation.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/delta_rearing_habitat.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/estimated_probs.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/floodplain.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/fry.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/get_weeks_flooded.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/get_wua_selector.html</loc>
@@ -25,7 +46,13 @@
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/inchannel_habitat_adult.html</loc>
   </url>
   <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/juvenile.html</loc>
+  </url>
+  <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/modeling_exist.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/pad_structures.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/pools.html</loc>
@@ -46,10 +73,16 @@
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/set_spawning_habitat.html</loc>
   </url>
   <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/spawn.html</loc>
+  </url>
+  <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/square_meters_to_acres.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/watershed_lengths.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/watershed_routing_indicators.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//reference/weeks_flooded.html</loc>
@@ -62,5 +95,8 @@
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat//articles/floodplain-modeling.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat//articles/floodplain_habitat_map.html</loc>
   </url>
 </urlset>

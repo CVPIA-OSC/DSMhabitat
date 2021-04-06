@@ -19,9 +19,9 @@ library(DSMhabitat)
 
 ### Map of Floodplain Spawning and Rearing Habitat
 
-The map below displays spawning and rearing floodplain habitat for Chinook and steelhead in the Central Valley. For more information on how we developed the spawning and rearing habitats please see the article on [floodplain modeling.](https://cvpia-osc.github.io/DSMhabitat/articles/floodplain-modeling.html) 
+The map below displays spawning and rearing habitat for Fall Run Chinook salmon, Spring Run Chinook salmon, and steelhead in the Central Valley. For the methodology used to model spawning and rearing habitats please see the article on [floodplain modeling.](https://cvpia-osc.github.io/DSMhabitat/articles/floodplain-modeling.html) 
 
-Click on the square in the top right of the map to add or hide layers showing the habitat for different species and life stages. This map shows spawning and rearing habitat for Fall Run Chinook salmon, Spring Run Chinook salmon, and steelhead. Hover above a point on the map to see the name of the river and the data source. 
+Click on the square in the top right of the map to add or hide layers showing the habitat for different species and life stages. Hover above a line on the map to see the name of the river and the name of the expert who provided habitat boundaries. 
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, results='asis'}
 library(leaflet)

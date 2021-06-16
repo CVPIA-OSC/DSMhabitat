@@ -1,7 +1,7 @@
 library(tidyverse)
 
-species_lookup <- c('fr', 'sr', 'st', 'wr')
-names(species_lookup) <- c("Fall Run Chinook", "Spring Run Chinook", "Steelhead", "Winter Run Chinook")
+species_lookup <- c('fr', 'sr', 'st', 'wr', 'lfr')
+names(species_lookup) <- c("Fall Run Chinook", "Spring Run Chinook", "Steelhead", "Winter Run Chinook", "Late-Fall Run Chinook")
 
 watershed_lengths <- read_csv('data-raw/salmonid_habitat_extents.csv') %>%
   arrange(Species, Id) %>%

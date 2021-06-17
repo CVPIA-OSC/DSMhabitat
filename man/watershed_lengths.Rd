@@ -5,7 +5,7 @@
 \alias{watershed_lengths}
 \title{Habitat Extent Lengths}
 \format{
-dataframe with 57 rows and 7 variables
+dataframe with 57 rows and 8 variables
 \describe{
 \item{order}{integer value representing watershed order in SIT model}
 \item{watershed}{name of watershed}
@@ -14,6 +14,7 @@ dataframe with 57 rows and 7 variables
 \item{feet}{length in feet}
 \item{source}{Expert who delineated habitat extents}
 \item{species}{species of habitat extent}
+\item{date_updated}{date that habitat extents were updated}
 }
 }
 \source{

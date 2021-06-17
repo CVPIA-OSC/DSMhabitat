@@ -169,25 +169,25 @@ lifestage combinations for each watershed</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>modeling_exist</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 32 x 23</span><span>
-#&gt;    Order Watershed FR_spawn FR_fry FR_juv FR_floodplain SR_spawn SR_fry SR_juv
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>         </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>    </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span>  </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span> 
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     1 Upper Sa~ TRUE     FALSE  FALSE  FALSE         FALSE    FALSE  FALSE 
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     2 Antelope~ FALSE    FALSE  FALSE  FALSE         FALSE    FALSE  FALSE 
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     3 Battle C~ TRUE     TRUE   TRUE   FALSE         TRUE     TRUE   TRUE  
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     4 Bear Cre~ FALSE    FALSE  FALSE  FALSE         </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     5 Big Chic~ FALSE    FALSE  FALSE  TRUE          FALSE    FALSE  FALSE 
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     6 Butte Cr~ FALSE    FALSE  FALSE  TRUE          TRUE     TRUE   TRUE  
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     7 Clear Cr~ TRUE     TRUE   TRUE   FALSE         TRUE     TRUE   TRUE  
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     8 Cottonwo~ TRUE     TRUE   TRUE   TRUE          FALSE    FALSE  FALSE 
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     9 Cow Creek FALSE    TRUE   TRUE   FALSE         </span><span style='color: #BB0000;'>NA</span><span>       </span><span style='color: #BB0000;'>NA</span><span>     </span><span style='color: #BB0000;'>NA</span><span>    
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>    10 Deer Cre~ FALSE    FALSE  FALSE  TRUE          FALSE    FALSE  FALSE 
-#&gt; </span><span style='color: #949494;'># ... with 22 more rows, and 14 more variables: SR_floodplain </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   ST_spawn </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, ST_fry </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, ST_juv </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, ST_floodplain </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   ST_adult </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, LFR_spawn </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, LFR_fry </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, LFR_juv </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   LFR_floodplain </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, WR_spawn </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, WR_fry </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>, WR_juv </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span style='color: #949494;'>,</span><span>
-#&gt; </span><span style='color: #949494;'>#   WR_floodplain </span><span style='color: #949494;font-style: italic;'>&lt;lgl&gt;</span><span></div><div class='input'>
-</div></span></pre>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 32 x 23</span>
+#&gt;    Order Watershed   FR_spawn FR_fry FR_juv FR_floodplain SR_spawn SR_fry SR_juv
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>         <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>    <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;lgl&gt;</span> 
+#&gt; <span style='color: #BCBCBC;'> 1</span>     1 Upper Sacr~ TRUE     FALSE  FALSE  FALSE         FALSE    FALSE  FALSE 
+#&gt; <span style='color: #BCBCBC;'> 2</span>     2 Antelope C~ FALSE    FALSE  FALSE  FALSE         FALSE    FALSE  FALSE 
+#&gt; <span style='color: #BCBCBC;'> 3</span>     3 Battle Cre~ TRUE     TRUE   TRUE   FALSE         TRUE     TRUE   TRUE  
+#&gt; <span style='color: #BCBCBC;'> 4</span>     4 Bear Creek  FALSE    FALSE  FALSE  FALSE         <span style='color: #BB0000;'>NA</span>       <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>    
+#&gt; <span style='color: #BCBCBC;'> 5</span>     5 Big Chico ~ FALSE    FALSE  FALSE  TRUE          FALSE    FALSE  FALSE 
+#&gt; <span style='color: #BCBCBC;'> 6</span>     6 Butte Creek FALSE    FALSE  FALSE  TRUE          TRUE     TRUE   TRUE  
+#&gt; <span style='color: #BCBCBC;'> 7</span>     7 Clear Creek TRUE     TRUE   TRUE   FALSE         TRUE     TRUE   TRUE  
+#&gt; <span style='color: #BCBCBC;'> 8</span>     8 Cottonwood~ TRUE     TRUE   TRUE   TRUE          FALSE    FALSE  FALSE 
+#&gt; <span style='color: #BCBCBC;'> 9</span>     9 Cow Creek   FALSE    TRUE   TRUE   FALSE         <span style='color: #BB0000;'>NA</span>       <span style='color: #BB0000;'>NA</span>     <span style='color: #BB0000;'>NA</span>    
+#&gt; <span style='color: #BCBCBC;'>10</span>    10 Deer Creek  FALSE    FALSE  FALSE  TRUE          FALSE    FALSE  FALSE 
+#&gt; <span style='color: #949494;'># ... with 22 more rows, and 14 more variables: SR_floodplain &lt;lgl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   ST_spawn &lt;lgl&gt;, ST_fry &lt;lgl&gt;, ST_juv &lt;lgl&gt;, ST_floodplain &lt;lgl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   ST_adult &lt;lgl&gt;, LFR_spawn &lt;lgl&gt;, LFR_fry &lt;lgl&gt;, LFR_juv &lt;lgl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   LFR_floodplain &lt;lgl&gt;, WR_spawn &lt;lgl&gt;, WR_fry &lt;lgl&gt;, WR_juv &lt;lgl&gt;,</span>
+#&gt; <span style='color: #949494;'>#   WR_floodplain &lt;lgl&gt;</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

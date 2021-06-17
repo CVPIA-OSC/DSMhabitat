@@ -482,7 +482,7 @@ NULL
 #' Habitat Extent Lengths
 #' @description A dataset containing the length of rearing and spawning extent within each CVPIA watershed for different species.
 #'
-#' @format dataframe with 57 rows and 7 variables
+#' @format dataframe with 57 rows and 8 variables
 #' \describe{
 #' \item{order}{integer value representing watershed order in SIT model}
 #' \item{watershed}{name of watershed}
@@ -491,6 +491,7 @@ NULL
 #' \item{feet}{length in feet}
 #' \item{source}{Expert who delineated habitat extents}
 #' \item{species}{species of habitat extent}
+#' \item{date_updated}{date that habitat extents were updated}
 #' }
 #'
 #' @examples

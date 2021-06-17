@@ -134,7 +134,7 @@
 
     <h2 class="hasAnchor" id="format"><a class="anchor" href="#format"></a>Format</h2>
 
-    <p>dataframe with 57 rows and 7 variables</p><dl>
+    <p>dataframe with 57 rows and 8 variables</p><dl>
 <dt>order</dt><dd><p>integer value representing watershed order in SIT model</p></dd>
 <dt>watershed</dt><dd><p>name of watershed</p></dd>
 <dt>lifestage</dt><dd><p>habitat type by lifestage, 'spawing' or 'rearing'</p></dd>
@@ -142,6 +142,7 @@
 <dt>feet</dt><dd><p>length in feet</p></dd>
 <dt>source</dt><dd><p>Expert who delineated habitat extents</p></dd>
 <dt>species</dt><dd><p>species of habitat extent</p></dd>
+<dt>date_updated</dt><dd><p>date that habitat extents were updated</p></dd>
 
 </dl>
 
@@ -154,21 +155,21 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='va'>watershed_lengths</span>
-</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 94 x 7</span><span>
-#&gt;    order watershed              lifestage miles    feet source          species
-#&gt;    </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>                  </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>     </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span>   </span><span style='color: #949494;font-style: italic;'>&lt;dbl&gt;</span><span> </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>           </span><span style='color: #949494;font-style: italic;'>&lt;chr&gt;</span><span>  
-#&gt; </span><span style='color: #BCBCBC;'> 1</span><span>     1 Upper Sacramento River spawning  59.4  </span><span style='text-decoration: underline;'>313</span><span>369. Jim Smith       fr     
-#&gt; </span><span style='color: #BCBCBC;'> 2</span><span>     1 Upper Sacramento River rearing   59.2  </span><span style='text-decoration: underline;'>312</span><span>500. Jim Smith       fr     
-#&gt; </span><span style='color: #BCBCBC;'> 3</span><span>     2 Antelope Creek         spawning  23.7  </span><span style='text-decoration: underline;'>125</span><span>060. Matt Johnson    fr     
-#&gt; </span><span style='color: #BCBCBC;'> 4</span><span>     2 Antelope Creek         rearing   31.6  </span><span style='text-decoration: underline;'>166</span><span>949. Matt Johnson    fr     
-#&gt; </span><span style='color: #BCBCBC;'> 5</span><span>     3 Battle Creek           spawning   3.97  </span><span style='text-decoration: underline;'>20</span><span>945. Jim Smith       fr     
-#&gt; </span><span style='color: #BCBCBC;'> 6</span><span>     3 Battle Creek           rearing    5.87  </span><span style='text-decoration: underline;'>31</span><span>003. Jim Smith       fr     
-#&gt; </span><span style='color: #BCBCBC;'> 7</span><span>     4 Bear Creek             spawning  17.1   </span><span style='text-decoration: underline;'>90</span><span>309. Tricia Bratcher fr     
-#&gt; </span><span style='color: #BCBCBC;'> 8</span><span>     4 Bear Creek             rearing   17.3   </span><span style='text-decoration: underline;'>91</span><span>324. Tricia Bratcher fr     
-#&gt; </span><span style='color: #BCBCBC;'> 9</span><span>     5 Big Chico Creek        rearing   15.1   </span><span style='text-decoration: underline;'>79</span><span>488. Clint Garman    fr     
-#&gt; </span><span style='color: #BCBCBC;'>10</span><span>     5 Big Chico Creek        spawning  15.1   </span><span style='text-decoration: underline;'>79</span><span>488. Clint Garman    fr     
-#&gt; </span><span style='color: #949494;'># ... with 84 more rows</span><span></div><div class='input'>
-</div></span></pre>
+</div><div class='output co'>#&gt; <span style='color: #949494;'># A tibble: 166 x 8</span>
+#&gt;    order watershed           lifestage miles   feet source  species date_updated
+#&gt;    <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>               <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>     <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span>  <span style='color: #949494; font-style: italic;'>&lt;dbl&gt;</span> <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>   <span style='color: #949494; font-style: italic;'>&lt;chr&gt;</span>       
+#&gt; <span style='color: #BCBCBC;'> 1</span>     0 Sacramento River (~ <span style='color: #BB0000;'>NA</span>        189.  9.98<span style='color: #949494;'>e</span>5 <span style='color: #BB0000;'>NA</span>      fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 2</span>     0 Sacramento River (~ <span style='color: #BB0000;'>NA</span>         55.5 2.93<span style='color: #949494;'>e</span>5 <span style='color: #BB0000;'>NA</span>      fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 3</span>     0 Sacramento River (~ <span style='color: #BB0000;'>NA</span>         33.4 1.77<span style='color: #949494;'>e</span>5 <span style='color: #BB0000;'>NA</span>      fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 4</span>     0 Wilkins Slough  to~ <span style='color: #BB0000;'>NA</span>         38.2 2.02<span style='color: #949494;'>e</span>5 <span style='color: #BB0000;'>NA</span>      fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 5</span>     0 Feather to American <span style='color: #BB0000;'>NA</span>         19.7 1.04<span style='color: #949494;'>e</span>5 <span style='color: #BB0000;'>NA</span>      fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 6</span>     0 wilkins slough  to~ <span style='color: #BB0000;'>NA</span>         38.2 2.02<span style='color: #949494;'>e</span>5 <span style='color: #BB0000;'>NA</span>      fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 7</span>     0 Lower-mid Sac abov~ <span style='color: #BB0000;'>NA</span>         35.6 1.88<span style='color: #949494;'>e</span>5 Mike U~ fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 8</span>     0 Lower-mid Sac belo~ <span style='color: #BB0000;'>NA</span>         22.4 1.18<span style='color: #949494;'>e</span>5 Mike U~ fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'> 9</span>     1 Upper Sacramento R~ spawning   59.4 3.13<span style='color: #949494;'>e</span>5 Jim Sm~ fr      6/1/2017    
+#&gt; <span style='color: #BCBCBC;'>10</span>     1 Upper Sacramento R~ rearing    59.2 3.13<span style='color: #949494;'>e</span>5 Jim Sm~ fr      6/1/2017    
+#&gt; <span style='color: #949494;'># ... with 156 more rows</span></div><div class='input'>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

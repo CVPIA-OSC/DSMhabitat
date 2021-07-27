@@ -14,7 +14,7 @@ library(DSMhabitat)
 ```
 
 ## Rearing Pools   
-Estimated percentages of rearing pools in certain watersheds were provided by [Mark Gard](mailto:Mark.Gard@Wildlife.ca.gov). The mean percentage of pools, excluding the Feather River, is 23.1%. This value was used for watersheds without an estimate. The total area of rearing pools in a watershed is calculated by multiplying the total channel area by the estimated percentange of pools. The channel areas were estimated using Google Earth Engine. 
+Estimated percentages of rearing pools in certain watersheds were provided by [Mark Gard](mailto:Mark.Gard@Wildlife.ca.gov). The mean percentage of pools, excluding the Feather River, is 23.1%. This value was used for watersheds without an estimate. The total area of rearing pools in a watershed is calculated by multiplying the total channel area by the estimated percentage of pools. The channel areas were estimated using Google Earth Engine. 
 
 ### Watersheds With Estimated Percent Pools 
 ```{r}
@@ -64,7 +64,7 @@ pools <- DSMhabitat::watershed_lengths %>%
            watershed == 'Upper Sacramento River' ~ pools_upper_sac,
            TRUE ~ ST_channel_area * percent_pools/100 * 4046.86)) %>%
   select(watershed, SR_pools_sq_meters, ST_pools_sq_meters) %>%
-  left_join(wss) %>%
+  full_join(wss) %>%
   arrange(order) %>% 
   filter(!is.na(order)) %>% 
   select(-order)

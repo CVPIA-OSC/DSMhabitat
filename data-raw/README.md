@@ -11,8 +11,6 @@ General
 * make all hyperlinks target="blank"
 * Capitalize Steelhead, Fall Run Chinook, Late Fall Run Chinook etc.
 
-
-
 ## Data Source
 
 Format data source as "Creator YYYY" or "Creator YYYY (pgs x-y)" this text should be linked to pdf of documentation stored on s3
@@ -79,8 +77,6 @@ Encoding:
 * **NA:** the species is not present in the watershed
 * **FALSE:** the species is present, but habitat modeling does not exist for the stream – typically estimated using a proxy species or scaling method
 * **TRUE:** the species is present and habitat modeling exists
-
-
 
 1. Put new data (csv) file within DSMhabitat > data-raw > watershed > [watershed_name] > data
 2. Check data availability & structures (units, columns, organization, column headers, additional scaling calculations, etc.) to make sure appropriate for being read into R

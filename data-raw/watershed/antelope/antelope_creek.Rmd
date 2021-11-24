@@ -17,7 +17,7 @@ library(DSMhabitat)
 None planned.  
 
 ## Instream Spawning and Rearing Habitat
-**Data Source:** [Calculated with a relationship between flow and mean weighted usable area from watersheds in the region with modeled habitat](http://cvpia-habitat-docs-markdown.s3-website-us-west-2.amazonaws.com/watershed/Regional_Approximation.html){target="_blank"}
+**Data Source:** [Gill and Tompkins 2020](http://cvpia-habitat-docs-markdown.s3-website-us-west-2.amazonaws.com/watershed/Regional_Approximation.html){target="_blank"}
 ```{r, include=FALSE}
 source('data-raw/watershed/regional_approximation/description_regional_approx.R')
 ```
@@ -29,7 +29,7 @@ source('data-raw/watershed/floodplain_utils.R')
 ```
 
 ## Floodplain Rearing Habitat 
-**Data Source:** Scaled from a Deer Creek flow to floodplain area relationship generated with a [2D HEC-RAS hydraulic model](https://cvpiahabitat-r-package.s3.us-west-2.amazonaws.com/cvpia-sit-model-inputs/DeerCreek_2Dmodel_FlowWest_Final.pdf){target="_blank"}. See [Deer Creek HSI modeling documentation](http://cvpia-habitat-docs-markdown.s3-website-us-west-2.amazonaws.com/watershed/deer_creek.html) for more details.
+**Data Source:** [Hackenjos 2019](https://cvpiahabitat-r-package.s3.us-west-2.amazonaws.com/cvpia-sit-model-inputs/DeerCreek_2Dmodel_FlowWest_Final.pdf){target="_blank"}. For additional information see [Gill and Tompkins 2021](http://cvpia-habitat-docs-markdown.s3-website-us-west-2.amazonaws.com/watershed/deer_creek.html){target="_blank"}.
 
 `r print_model_details('Antelope Creek', 'fr')`
 
@@ -48,7 +48,7 @@ usethis::use_data(antelope_creek_floodplain, overwrite = TRUE)
 ```
 
 
-*...with 17 more rows*
+*...with `r nrow(antelope_creek_floodplain) - 5` more rows*
 
 ## Floodplain Plot
 ```{r, echo = FALSE}

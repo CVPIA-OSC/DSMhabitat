@@ -64,7 +64,7 @@ knitr::kable(align = 'c', head(american_spawning, 5),
              watershed = section of stream modeled for CVPIA SDM")
 ```
 
-*...with 40 more rows.*
+*...with `r nrow(american_spawning) - 5` more rows.*
 
 ### Rearing Data 
 ```{r, echo = FALSE}
@@ -82,7 +82,7 @@ knitr::kable(align = 'c', head(american_rearing, 5),
   
 ```
 
-*...with 6 more rows.*
+*...with `r nrow(american_rearing) - 5` more rows.*
 
 ### Spawning WUA 
 The Fall Run Chinook Salmon and Steelhead spawning habitat data from [ARWA 2017](https://s3-us-west-2.amazonaws.com/cvpiahabitat-r-package/cvpia-sit-model-inputs/ARWA-702.pdf) is located in Attachment B. Fall Run Chinook Salmon data are in Table B-4 on page 91 and Figure B-8 on page 92. Steelhead data are in Table B-9 and Figure B-26 on page 107. 
@@ -97,7 +97,7 @@ american_river_instream %>%
   geom_line() +
   labs(x = 'Flow (cfs)', y = 'WUA (sqft/1000ft)') + 
   theme_minimal() + 
-  scale_color_manual(values = c('#d95f02', '#7570b3')) +
+  scale_color_brewer(palette = "Dark2") +
   theme(legend.justification = c(1, 0), legend.position = c(.9, .7))
 
 ```
@@ -113,7 +113,7 @@ american_river_instream %>%
   geom_line() +
   labs(x = 'Flow (cfs)', y = 'WUA (sqft/1000ft)') + 
   theme_minimal() + 
-  scale_color_manual(values = c('#d95f02', '#7570b3')) +
+  scale_color_brewer(palette = "Dark2") +
   theme(legend.justification = c(1, 0), legend.position = c(.9, .7))
 
 ```
@@ -152,7 +152,7 @@ knitr::kable(align = 'c', head(american_river_floodplain, 5),
 usethis::use_data(american_river_floodplain, overwrite = TRUE)
 ```
 
-*...with 29 more rows*
+*...with `r nrow(american_river_floodplain) - 5` more rows*
 
 ## Floodplain Plot
 ```{r, echo=FALSE}

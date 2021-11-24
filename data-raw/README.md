@@ -117,4 +117,4 @@ Encoding:
 
 ### Dependency Graph
 
-TODO: insert dependency graph in here
+![](../man/figures/DSMhabitat_dependencies.svg)

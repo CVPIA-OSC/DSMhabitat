@@ -117,4 +117,4 @@ Encoding:
 
 ### Dependency Graph
 
-![](DSMhabitat dependencies.svg)
+![](../man/figures/DSMhabitat_dependencies.svg)

@@ -27,14 +27,26 @@ Click on the square in the top right of the map to add or hide layers showing th
 
 ```{r, echo = FALSE, warning = FALSE, message = FALSE, results='asis'}
 library(leaflet)
-library(rgdal)
 library(tidyverse)
 library(readxl)
+library(sf)
 
-salmonid_extents <- readOGR("../data-raw/rearing_spatial_data/salmonid_habitat_extents/salmonid_habitat_extents.shp", 
-                            stringsAsFactors = FALSE, verbose = FALSE) %>%
-  spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
+# salmonid_extents <- readOGR("../data-raw/rearing_spatial_data/salmonid_habitat_extents/salmonid_habitat_extents.shp",
+#                             stringsAsFactors = FALSE, verbose = FALSE) %>%
+#   spTransform(CRS("+proj=longlat +datum=WGS84 +no_defs"))
 
+salmonid_extents <- read_sf('../data-raw/rearing_spatial_data/salmonid_habitat_extents/salmonid_habitat_extents.shp') %>%
+  st_transform(crs = "+proj=longlat +datum=WGS84 +no_defs")
+
+# add north and south deltas to rearing extent to spring run 
+delta_subset <- salmonid_extents %>%
+  filter(River %in% c("North Delta", "South Delta")) %>% 
+  mutate(Species = "Spring Run Chinook") 
+
+salmonid_extents <- bind_rows(delta_subset, salmonid_extents)
+```
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, results='asis'}
 sps <- subset(salmonid_extents, Species == 'Spring Run Chinook' & Habitat == 'spawning')
 spr <- subset(salmonid_extents, Species == 'Spring Run Chinook' & Habitat == 'rearing')
 fs <- subset(salmonid_extents, Species == 'Fall Run Chinook' & Habitat == 'spawning')

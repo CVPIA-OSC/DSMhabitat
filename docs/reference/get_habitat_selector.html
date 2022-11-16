@@ -40,6 +40,9 @@
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
     </li>
+    <li>
+      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -69,23 +72,32 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_habitat_selector</span><span class="op">(</span><span class="va">species_wuas</span>, <span class="va">species</span>, <span class="va">life_stage</span>, mode <span class="op">=</span> <span class="st">"wua"</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_habitat_selector</span><span class="op">(</span><span class="va">species_wuas</span>, <span class="va">species</span>, <span class="va">life_stage</span>, mode <span class="op">=</span> <span class="st">"wua"</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>species_wuas</dt>
 <dd><p>vector of column names within modeling data table for the targeted watershed</p></dd>
+
+
 <dt>species</dt>
 <dd><p>target species: "fr" for fall run, "lfr" for late fall run, "sr" for spring run, and "st" for steelhead</p></dd>
+
+
 <dt>life_stage</dt>
 <dd><p>"spawn", fry", "juv", or "adult"</p></dd>
+
+
 <dt>mode</dt>
 <dd><p>one of "wua" or "hsi"</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>column name of desired habitat relationship</p>
+    
+
+<p>column name of desired habitat relationship</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -106,7 +118,7 @@ then the column representing the most appropriate proxy will be returned.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

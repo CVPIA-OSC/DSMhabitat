@@ -40,6 +40,9 @@
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
     </li>
+    <li>
+      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -69,7 +72,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">watershed_lengths</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">watershed_lengths</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -108,22 +111,23 @@
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">watershed_lengths</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 168 x 8</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    order watershed            lifestage miles   feet source species date_updated</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     0 Wilkins Slough  to ~ <span style="color: #BB0000;">NA</span>         38.2 2.02<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     0 Feather to American  <span style="color: #BB0000;">NA</span>         19.7 1.04<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     0 Lower-mid Sac above~ <span style="color: #BB0000;">NA</span>         35.6 1.88<span style="color: #949494;">e</span>5 Mike ~ fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     0 Lower-mid Sac below~ <span style="color: #BB0000;">NA</span>         22.4 1.18<span style="color: #949494;">e</span>5 Mike ~ fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     0 Sacramento River (B~ <span style="color: #BB0000;">NA</span>        189.  9.98<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     0 Sacramento River (F~ <span style="color: #BB0000;">NA</span>         33.4 1.77<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     0 Sacramento River (k~ <span style="color: #BB0000;">NA</span>         55.5 2.93<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     0 wilkins slough  to ~ <span style="color: #BB0000;">NA</span>         38.2 2.02<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     1 Upper Sacramento Ri~ spawning   59.4 3.13<span style="color: #949494;">e</span>5 Jim S~ fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     1 Upper Sacramento Ri~ rearing    59.2 3.13<span style="color: #949494;">e</span>5 Jim S~ fr      6/1/2017    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ... with 158 more rows</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">watershed_lengths</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 168 × 8</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    order watershed                   lifes…¹ miles   feet source species date_…²</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     0 Wilkins Slough  to Feather  <span style="color: #BB0000;">NA</span>       38.2 2.02<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     0 Feather to American         <span style="color: #BB0000;">NA</span>       19.7 1.04<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     0 Lower-mid Sac above fremont <span style="color: #BB0000;">NA</span>       35.6 1.88<span style="color: #949494;">e</span>5 Mike … fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     0 Lower-mid Sac below fremont <span style="color: #BB0000;">NA</span>       22.4 1.18<span style="color: #949494;">e</span>5 Mike … fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     0 Sacramento River (Battle t… <span style="color: #BB0000;">NA</span>      189.  9.98<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     0 Sacramento River (Feather … <span style="color: #BB0000;">NA</span>       33.4 1.77<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     0 Sacramento River (keswick … <span style="color: #BB0000;">NA</span>       55.5 2.93<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     0 wilkins slough  to feather  <span style="color: #BB0000;">NA</span>       38.2 2.02<span style="color: #949494;">e</span>5 <span style="color: #BB0000;">NA</span>     fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     1 Upper Sacramento River      spawni…  59.4 3.13<span style="color: #949494;">e</span>5 Jim S… fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>     1 Upper Sacramento River      rearing  59.2 3.13<span style="color: #949494;">e</span>5 Jim S… fr      6/1/20…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 158 more rows, and abbreviated variable names ¹​lifestage,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ²​date_updated</span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -138,7 +142,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

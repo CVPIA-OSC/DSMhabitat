@@ -40,6 +40,9 @@
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
     </li>
+    <li>
+      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -69,23 +72,32 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">set_instream_habitat</span><span class="op">(</span><span class="va">watershed</span>, <span class="va">species</span>, <span class="va">life_stage</span>, <span class="va">flow</span>, <span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_instream_habitat</span><span class="op">(</span><span class="va">watershed</span>, <span class="va">species</span>, <span class="va">life_stage</span>, <span class="va">flow</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>watershed</dt>
 <dd><p>one of the watersheds defined for the SIT model</p></dd>
+
+
 <dt>species</dt>
 <dd><p>one of 'fr' (Fall Run), 'lfr' (Late Fall Run), sr' (Spring Run), or 'st' (Steelhead)</p></dd>
+
+
 <dt>life_stage</dt>
 <dd><p>life stage of fish, one of 'juv', 'adult' or 'fry'</p></dd>
+
+
 <dt>flow</dt>
 <dd><p>value used to determine habitat area</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>habitat area in square meters</p>
+    
+
+<p>habitat area in square meters</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -139,11 +151,11 @@ are marked with an asterisk.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Fry rearing habitat value in square meters for Fall Run in the Merced River at 425 cfs.</span></span>
-<span class="r-in"><span class="fu">set_instream_habitat</span><span class="op">(</span><span class="st">'Merced River'</span>, <span class="st">'fr'</span>, <span class="st">'fry'</span>, <span class="fl">425</span><span class="op">)</span> <span class="co"># habitat modeling exists</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Fry rearing habitat value in square meters for Fall Run in the Merced River at 425 cfs.</span></span></span>
+<span class="r-in"><span><span class="fu">set_instream_habitat</span><span class="op">(</span><span class="st">'Merced River'</span>, <span class="st">'fr'</span>, <span class="st">'fry'</span>, <span class="fl">425</span><span class="op">)</span> <span class="co"># habitat modeling exists</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 446380.6</span>
-<span class="r-in"><span class="co"># Juvenile rearing habitat value in square meters for Fall Run in Elder Creek at 300 cfs.</span></span>
-<span class="r-in"><span class="fu">set_instream_habitat</span><span class="op">(</span><span class="st">'Elder Creek'</span>, <span class="st">'fr'</span>, <span class="st">'juv'</span>, <span class="fl">300</span><span class="op">)</span> <span class="co"># no habitat modeling exists, composite used</span></span>
+<span class="r-in"><span><span class="co"># Juvenile rearing habitat value in square meters for Fall Run in Elder Creek at 300 cfs.</span></span></span>
+<span class="r-in"><span><span class="fu">set_instream_habitat</span><span class="op">(</span><span class="st">'Elder Creek'</span>, <span class="st">'fr'</span>, <span class="st">'juv'</span>, <span class="fl">300</span><span class="op">)</span> <span class="co"># no habitat modeling exists, composite used</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 31964.76</span>
 </code></pre></div>
     </div>
@@ -159,7 +171,7 @@ are marked with an asterisk.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

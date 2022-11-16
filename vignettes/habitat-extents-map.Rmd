@@ -2,7 +2,7 @@
 title: "Interactive Map of Spawning and Rearing Habitat"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Interactive Floodplain Habitat Map}
+  %\VignetteIndexEntry{Interactive Map of Spawning and Rearing Habitat}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

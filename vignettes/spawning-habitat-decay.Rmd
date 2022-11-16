@@ -1,0 +1,32 @@
+---
+title: "Spawning Habitat Decay"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spawning Habitat Decay}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  eval = FALSE
+)
+```
+
+```{r setup}
+library(DSMhabitat)
+```
+
+## Data Preperation
+
+This section outlines how data was wrangled for use in this analysis. 
+These section are referenced through out this document.
+
+### Gravel Size
+
+Gravel size data was obtained by digitizing the bar plot shown below
+from the [link to report](#). 
+
+![](assets/gravel-scaledown-source.png){fig-alt="Figure of source plot from which we digitized data"}

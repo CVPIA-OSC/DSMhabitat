@@ -15,7 +15,7 @@ LazyData: true
 Suggests: testthat,
     knitr,
     rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.1
 VignetteBuilder: knitr
 URL: https://cvpia-osc.github.io/DSMhabitat/
 BugReports: https://github.com/CVPIA-OSC/DSMhabitat/issues

@@ -476,6 +476,7 @@ NULL
 #'   \item Delta Node Selection: Mark Tompkins \email{mtompkins@@flowwest.com}
 #'   \item Data Wrangling: Sadie Gill \email{sgill@@flowwest.com}
 #' }
+#' @keywords internal
 'delta_rearing_habitat'
 
 # OTHER-------------
@@ -945,4 +946,12 @@ NULL
 #' @rdname estimated_probs
 #' @format NULL
 "prob_nest_scoured"
+
+
+#' @title Gravel size to proportion of movement
+"gravel_size_to_prop_of_movement"
+
+
+
+
 

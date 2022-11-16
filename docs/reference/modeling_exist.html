@@ -41,6 +41,9 @@ lifestage combinations for each watershed"><!-- mathjax --><script src="https://
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
     </li>
+    <li>
+      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -71,7 +74,7 @@ lifestage combinations for each watershed</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">modeling_exist</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">modeling_exist</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -154,26 +157,26 @@ lifestage combinations for each watershed</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">modeling_exist</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 x 23</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Order Watershed   FR_spawn FR_fry FR_juv FR_floodplain SR_spawn SR_fry SR_juv</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>         <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 Upper Sacr~ TRUE     FALSE  FALSE  FALSE         FALSE    FALSE  FALSE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 Antelope C~ FALSE    FALSE  FALSE  FALSE         FALSE    FALSE  FALSE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 Battle Cre~ TRUE     TRUE   TRUE   FALSE         TRUE     TRUE   TRUE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 Bear Creek  FALSE    FALSE  FALSE  FALSE         <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 Big Chico ~ FALSE    FALSE  FALSE  TRUE          FALSE    FALSE  FALSE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 Butte Creek FALSE    FALSE  FALSE  TRUE          TRUE     TRUE   TRUE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7 Clear Creek TRUE     TRUE   TRUE   FALSE         TRUE     TRUE   TRUE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 Cottonwood~ TRUE     TRUE   TRUE   TRUE          FALSE    FALSE  FALSE </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 Cow Creek   FALSE    TRUE   TRUE   FALSE         <span style="color: #BB0000;">NA</span>       <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 Deer Creek  TRUE     FALSE  TRUE   TRUE          FALSE    FALSE  TRUE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ... with 22 more rows, and 14 more variables: SR_floodplain &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ST_spawn &lt;lgl&gt;, ST_fry &lt;lgl&gt;, ST_juv &lt;lgl&gt;, ST_floodplain &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ST_adult &lt;lgl&gt;, LFR_spawn &lt;lgl&gt;, LFR_fry &lt;lgl&gt;, LFR_juv &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   LFR_floodplain &lt;lgl&gt;, WR_spawn &lt;lgl&gt;, WR_fry &lt;lgl&gt;, WR_juv &lt;lgl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   WR_floodplain &lt;lgl&gt;</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">modeling_exist</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 32 × 23</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Order Watershed   FR_sp…¹ FR_fry FR_juv FR_fl…² SR_sp…³ SR_fry SR_juv SR_fl…⁴</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span>     1 Upper Sacr… TRUE    FALSE  FALSE  FALSE   FALSE   FALSE  FALSE  FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span>     2 Antelope C… FALSE   FALSE  FALSE  FALSE   FALSE   FALSE  FALSE  FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span>     3 Battle Cre… TRUE    TRUE   TRUE   FALSE   TRUE    TRUE   TRUE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span>     4 Bear Creek  FALSE   FALSE  FALSE  FALSE   <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span>     5 Big Chico … FALSE   FALSE  FALSE  TRUE    FALSE   FALSE  FALSE  FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span>     6 Butte Creek FALSE   FALSE  FALSE  TRUE    TRUE    TRUE   TRUE   TRUE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span>     7 Clear Creek TRUE    TRUE   TRUE   FALSE   TRUE    TRUE   TRUE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span>     8 Cottonwood… TRUE    TRUE   TRUE   TRUE    FALSE   FALSE  FALSE  TRUE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span>     9 Cow Creek   FALSE   TRUE   TRUE   FALSE   <span style="color: #BB0000;">NA</span>      <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     <span style="color: #BB0000;">NA</span>     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span>    10 Deer Creek  TRUE    FALSE  TRUE   TRUE    FALSE   FALSE  TRUE   TRUE   </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 22 more rows, 13 more variables: ST_spawn &lt;lgl&gt;, ST_fry &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ST_juv &lt;lgl&gt;, ST_floodplain &lt;lgl&gt;, ST_adult &lt;lgl&gt;, LFR_spawn &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   LFR_fry &lt;lgl&gt;, LFR_juv &lt;lgl&gt;, LFR_floodplain &lt;lgl&gt;, WR_spawn &lt;lgl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   WR_fry &lt;lgl&gt;, WR_juv &lt;lgl&gt;, WR_floodplain &lt;lgl&gt;, and abbreviated variable</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   names ¹​FR_spawn, ²​FR_floodplain, ³​SR_spawn, ⁴​SR_floodplain</span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -188,7 +191,7 @@ lifestage combinations for each watershed</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

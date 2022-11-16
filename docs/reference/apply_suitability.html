@@ -42,6 +42,9 @@ available at a given flow."><!-- mathjax --><script src="https://cdnjs.cloudflar
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
     </li>
+    <li>
+      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -73,21 +76,26 @@ available at a given flow.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">apply_suitability</span><span class="op">(</span><span class="va">fp_hab_sq_meters</span>, suitable_factor <span class="op">=</span> <span class="fl">0.27</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">apply_suitability</span><span class="op">(</span><span class="va">fp_hab_sq_meters</span>, suitable_factor <span class="op">=</span> <span class="fl">0.27</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>fp_hab_sq_meters</dt>
 <dd><p>Total floodplain area in square meters</p></dd>
+
+
 <dt>suitable_factor</dt>
 <dd><p>Habitat suitability factor, default value of .27 from
 U.S. Fish and Wildlife Services San Joaquin River Restoration Program
 <a href="https://s3-us-west-2.amazonaws.com/cvpiahabitat-r-package/20121127_MinimumRearingHabitat.pdf" class="external-link">2012 report.</a></p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Total suitable floodplain area in square meters</p>
+    
+
+<p>Total suitable floodplain area in square meters</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -118,7 +126,7 @@ U.S. Fish and Wildlife Services San Joaquin River Restoration Program
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

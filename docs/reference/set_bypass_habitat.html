@@ -40,6 +40,9 @@
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
     </li>
+    <li>
+      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
+    </li>
   </ul></li>
 <li>
   <a href="../news/index.html">News</a>
@@ -69,25 +72,30 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">set_bypass_habitat</span><span class="op">(</span><span class="va">bypass</span>, <span class="va">flow</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">set_bypass_habitat</span><span class="op">(</span><span class="va">bypass</span>, <span class="va">flow</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>bypass</dt>
 <dd><p>one section of the bypasses ('yolo1', 'yolo2', 'sutter1', 'sutter2', 'sutter3', or 'sutter4')</p></dd>
+
+
 <dt>flow</dt>
 <dd><p>value used to determine habitat area</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>habitat area in square meters</p>
+    
+
+<p>habitat area in square meters</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># habitat area in square meters for section 1 of the yolo bypass at 200 cfs</span></span>
-<span class="r-in"><span class="fu">set_bypass_habitat</span><span class="op">(</span><span class="st">'yolo1'</span>, <span class="fl">200</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># habitat area in square meters for section 1 of the yolo bypass at 200 cfs</span></span></span>
+<span class="r-in"><span><span class="fu">set_bypass_habitat</span><span class="op">(</span><span class="st">'yolo1'</span>, <span class="fl">200</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 974867.7</span>
 </code></pre></div>
     </div>
@@ -103,7 +111,7 @@
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
       </footer></div>

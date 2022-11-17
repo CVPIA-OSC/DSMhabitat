@@ -951,7 +951,14 @@ NULL
 #' @title Gravel size to proportion of movement
 "gravel_size_to_prop_of_movement"
 
+#' @title Watershed Decay Status
+#' @description Watershed to TRUE/FALSE lookup indicating whether habitat decay occurs.
+"watershed_decay_status"
 
-
+#' @title Watershed Decays
+#' @description The total decay by watershed. This includes watersheds with no decay, these simply
+#' have all values equal to 0. For watersheds with decay, there are three different curves,
+#' 'min', 'avg', 'max'.
+"watershed_decays"
 
 

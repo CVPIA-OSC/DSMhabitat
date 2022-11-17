@@ -944,3 +944,19 @@ usethis::use_data(delta_contact_points, overwrite = TRUE)
 delta_prop_high_predation <- c("North Delta" = 1, "South Delta" = 1)
 usethis::use_data(delta_prop_high_predation, overwrite = TRUE)
 
+
+watershed_decay_status <- fallRunDSM::watershed_labels %in% c(
+  "Upper Sacramento River",
+  "Clear Creek",
+  "Feather River",
+  "Yuba River",
+  "American River",
+  "Calaveras River",
+  "Mokelumne River",
+  "Merced River",
+  "Stanislaus River",
+  "Mokelumne River", 
+  "Tuolumne River"
+) |> setNames(fallRunDSM::watershed_labels)
+
+usethis::use_data(watershed_decay_status, overwrite = TRUE)

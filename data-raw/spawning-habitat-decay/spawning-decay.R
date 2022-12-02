@@ -284,34 +284,32 @@ total_scaledown <- domain_expert_additional_scaledown * sac_river_observation_sc
 
 # Apply to all watersheds -----------------------------
 
-
-
 MIN_flow_cfs_to_sed_cfd_final <- approxfun(
   x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_min * 
     DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
-    domain_expert_additional_scaledown
+    total_scaledown
 )
 
 AVG_flow_cfs_to_sed_cfd_final <- approxfun(
   x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_avg * 
     DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
-    domain_expert_additional_scaledown
+    total_scaledown
 )
 
 MAX_flow_cfs_to_sed_cfd_final <- approxfun(
   x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_max * 
     DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
-    domain_expert_additional_scaledown
+    total_scaledown
 )
 
 # Exceedance probs --------------------------------------
 dsm_flows <- DSMflow::flows_cfs$biop_itp_2018_2019 |> 
   pivot_longer(cols = -date, names_to = "watershed", values_to = "flow_cfs")
 
-watersheds_with_decay <- names(which(watershed_decay_status))
+watersheds_with_decay <- names(which(DSMhabitat::watershed_decay_status))
 
 exceedance_curves <- map(watersheds_with_decay, function(w) {
   d <- dsm_flows |> filter(watershed == w) |> 
@@ -363,143 +361,63 @@ watershed_decays <- map2(fallRunDSM::watershed_labels, watershed_offsets, functi
 }) |> 
   set_names(fallRunDSM::watershed_labels)
 
-
 usethis::use_data(watershed_decays, overwrite = TRUE)
 
+watershed_decays$`American River` |> 
+  ggplot(aes(date, decay_acres_month, color = decay_type)) + geom_line()
 
-plot_instant_decay <- map(watershed_decays, function(w) {
-  w |> 
-    ggplot(aes(date, decay_acres_month, color = decay_type)) + geom_line() + 
-    labs(title = head(w, 1)$watershed)
+watershed_decays$`American River` |> 
+  group_by(decay_type) |> 
+  mutate(agg_decay = cumsum(-decay_acres_month)) |> 
+  ggplot(aes(date, agg_decay, color = decay_type)) + geom_line()
+
+# steps we need to go through to apply the decay on this dataset
+# 1. get the decay amount per watershed, have it filtered to the level min,avg,max,none
+# compute the amount of habitat to be removed
+watershed_decay_level_lookups <- c(
+  `Upper Sacramento River` = "min", `Antelope Creek` = "none", 
+  `Battle Creek` = "none", `Bear Creek` = "none", `Big Chico Creek` = "none", 
+  `Butte Creek` = "none", `Clear Creek` = "min", `Cottonwood Creek` = "none", 
+  `Cow Creek` = "none", `Deer Creek` = "none", `Elder Creek` = "none", 
+  `Mill Creek` = "none", `Paynes Creek` = "none", `Stony Creek` = "max", 
+  `Thomes Creek` = "none", `Upper-mid Sacramento River` = "none", 
+  `Sutter Bypass` = "none", `Bear River` = "none", `Feather River` = "avg", 
+  `Yuba River` = "min", `Lower-mid Sacramento River` = "none", `Yolo Bypass` = "none", 
+  `American River` = "max", `Lower Sacramento River` = "none", `Calaveras River` = "min", 
+  `Cosumnes River` = "none", `Mokelumne River` = "avg", `Merced River` = "avg", 
+  `Stanislaus River` = "avg", `Tuolumne River` = "min", `San Joaquin River` = "none"
+)
+
+
+watersheds_with_decay <- names(which(DSMhabitat::watershed_decay_status))
+
+spawning_decay_multiplier <- purrr::map(names(watershed_decay_level_lookups), function(w) {
+  if (w %in% watersheds_with_decay) {
+    decay <- DSMhabitat::watershed_decays[[w]] |> 
+      dplyr::filter(decay_type == watershed_decay_level_lookups[w]) |> 
+      dplyr::mutate(decay_accum = cumsum(decay_acres_month), 
+                    decay_mult = 1 - (decay_accum / DSMhabitat::spawning_habitat_average$fr[w]), 
+                    year = lubridate::year(date),
+                    month = lubridate::month(date)) |> 
+      dplyr::select(year, month, decay_mult) |> 
+      tidyr::pivot_wider(names_from = "year", values_from = "decay_mult")
+    
+    matrix(unlist(decay[,-1]), nrow = 12, dimnames = list(month.abb, 1979:2000))
+    
+  } else {
+    matrix(1, nrow = 12, ncol = 22)
+  }
 }) |> 
-  set_names(fallRunDSM::watershed_labels)
-
-plot_accum_decay <- map(watershed_decays, function(w) {
-  w |> 
-    group_by(decay_type) |> 
-    mutate(accum_decay = 0 - cumsum(decay_acres_month)) |> 
-    ungroup() |> 
-    ggplot(aes(date, accum_decay, color = decay_type)) + geom_line() + 
-    labs(title = head(w, 1)$watershed, y = "Acres")
-}) |> 
-  set_names(fallRunDSM::watershed_labels)
+  setNames(names(watershed_decay_level_lookups))
 
 
-plot_accum_decay$`Deer Creek`+ 
-  labs(x = "", y = "Accumulated Decay (acres)", color = "Transport Curve")
-
-
-summary_stats <- map_df(watershed_decays[-1], function(w) {
-  watershed <- distinct(w, watershed) |> pull()
-  w |> 
-    group_by(year = year(date), decay_type) |> 
-    summarise(
-      total = sum(decay_acres_month)
-    ) |> 
-    ungroup() |> 
-    group_by(decay_type) |> 
-    summarise(
-      avg_decay = mean(total)
-    ) |> 
-    ungroup() |> 
-    mutate(
-      watershed = watershed
-    )
-})
-
-# summary_stats |> 
-#   select(watershed, decay_type, avg_decay) |> 
-#   mutate(avg_decay = round(avg_decay, 5)) |> 
-#   pivot_wider(names_from = "decay_type", values_from = "avg_decay") |> 
-#   select(watershed, decay_min, decay_avg, decay_max) |> 
-#   mutate(
-#     incipient_motion_flow = watershed_offsets[watershed]
-#   ) |> 
-#   write_csv("data/all-watershed-decay-summary.csv")
-
-
-# Calaveras, Mokelumne, Stanislaus, Tuolumne, and Merced ------------------
-summary_stats |> 
-  select(watershed, decay_type, avg_decay) |> 
-  mutate(avg_decay = round(avg_decay, 5)) |> 
-  pivot_wider(names_from = "decay_type", values_from = "avg_decay") |> 
-  select(watershed, decay_min, decay_avg, decay_max) |> 
-  mutate(
-    incipient_motion_flow = watershed_offsets[watershed]
-  ) |> 
-  filter(watershed %in% c(
-    "Calaveras River", "Mokelumne River", "Stanislaus River", "Tuolumne River", "Merced River"
-  ))
-
-
-plot_accum_decay$`Calaveras River`
-plot_accum_decay$`Mokelumne River`
-plot_accum_decay$`Stanislaus River`
-plot_accum_decay$`Tuolumne River`
-plot_accum_decay$`Merced River`
-
-plot_instant_decay$`Merced River`
-
-
-# Yuba River ------------------
-summary_stats |> 
-  select(watershed, decay_type, avg_decay) |> 
-  mutate(avg_decay = round(avg_decay, 5)) |> 
-  pivot_wider(names_from = "decay_type", values_from = "avg_decay") |> 
-  select(watershed, decay_min, decay_avg, decay_max) |> 
-  mutate(
-    incipient_motion_flow = watershed_offsets[watershed]
-  ) |> 
-  filter(watershed %in% c(
-    "Yuba River"
-  ))
-
-
-plot_accum_decay$`Yuba River`
-
-plot_instant_decay$`Yuba River`
-
-
-# Feather River ------------------
-summary_stats |> 
-  select(watershed, decay_type, avg_decay) |> 
-  mutate(avg_decay = round(avg_decay, 5)) |> 
-  pivot_wider(names_from = "decay_type", values_from = "avg_decay") |> 
-  select(watershed, decay_min, decay_avg, decay_max) |> 
-  mutate(
-    incipient_motion_flow = watershed_offsets[watershed]
-  ) |> 
-  filter(watershed %in% c(
-    "Feather River"
-  ))
-
-
-plot_accum_decay$`Feather River`
-
-plot_instant_decay$`Feather River`
+usethis::use_data(spawning_decay_multiplier, overwrite = TRUE)
 
 
 
-# American 
 
+test <- array(unlist(spawning_decay_multiplier), dim = c(31, 12, 22))
 
-summary_stats |> 
-  select(watershed, decay_type, avg_decay) |> 
-  mutate(avg_decay = round(avg_decay, 5)) |> 
-  pivot_wider(names_from = "decay_type", values_from = "avg_decay") |> 
-  select(watershed, decay_min, decay_avg, decay_max) |> 
-  mutate(
-    incipient_motion_flow = watershed_offsets[watershed]
-  ) |> 
-  filter(watershed %in% c(
-    "American River"
-  ))
-
-plot_accum_decay$`American River`
-
-plot_instant_decay$`American River`
-
-
-
+test[1, ,] == spawning_decay_multiplier$`Upper Sacramento River`
 
 

@@ -959,6 +959,8 @@ NULL
 #' @description The total decay by watershed. This includes watersheds with no decay, these simply
 #' have all values equal to 0. For watersheds with decay, there are three different curves,
 #' 'min', 'avg', 'max'.
+#' @format a list of 31 dataframes, each dataframe containing accumualted decay for the 20 year simulation
+#' for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds. 
 "watershed_decays"
 
 

@@ -5,7 +5,8 @@
 \alias{watershed_decays}
 \title{Watershed Decays}
 \format{
-An object of class \code{list} of length 31.
+a list of 31 dataframes, each dataframe containing accumualted decay for the 20 year simulation
+for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds.
 }
 \usage{
 watershed_decays

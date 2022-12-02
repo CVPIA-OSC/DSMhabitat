@@ -951,6 +951,7 @@ watershed_decay_status <- fallRunDSM::watershed_labels %in% c(
   "Feather River",
   "Yuba River",
   "American River",
+  "Stony Creek",
   "Calaveras River",
   "Mokelumne River",
   "Merced River",
@@ -960,3 +961,16 @@ watershed_decay_status <- fallRunDSM::watershed_labels %in% c(
 ) |> setNames(fallRunDSM::watershed_labels)
 
 usethis::use_data(watershed_decay_status, overwrite = TRUE)
+
+
+# average spawning habitat
+spawning_habitat_average <-
+  list(
+    fr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::fr_spawn$biop_itp_2018_2019, MARGIN = 1, mean)), 
+    sr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::sr_spawn$biop_itp_2018_2019, MARGIN = 1, mean)), 
+    wr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::wr_spawn$biop_itp_2018_2019, MARGIN = 1, mean))
+  )
+
+usethis::use_data(spawning_habitat_average, overwrite = TRUE)
+
+

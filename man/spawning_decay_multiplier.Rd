@@ -3,7 +3,7 @@
 \docType{data}
 \name{spawning_decay_multiplier}
 \alias{spawning_decay_multiplier}
-\title{Spawning Decay Multiplier}
+\title{Fall-run Spawning Decay Multiplier}
 \format{
 list of 31, 12x22 matrices.
 }
@@ -12,5 +12,8 @@ spawning_decay_multiplier
 }
 \description{
 List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
+}
+\details{
+this decay multiplier only exists for Fall-run, Spring and Winter run models rely on probabilistic spawning habitat decay.
 }
 \keyword{datasets}

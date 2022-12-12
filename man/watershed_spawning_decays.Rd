@@ -5,7 +5,7 @@
 \alias{watershed_spawning_decays}
 \title{Watershed Spawning Habitat Decays}
 \format{
-a list of 31 dataframes, each dataframe containing accumualted decay for the 20 year simulation
+a list of 31 dataframes, each dataframe containing accumulated decay for the 20 year simulation
 for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds.
 }
 \usage{

@@ -410,14 +410,4 @@ spawning_decay_multiplier <- purrr::map(names(watershed_decay_level_lookups), fu
 }) |> 
   setNames(names(watershed_decay_level_lookups))
 
-
 usethis::use_data(spawning_decay_multiplier, overwrite = TRUE)
-
-
-
-
-test <- array(unlist(spawning_decay_multiplier), dim = c(31, 12, 22))
-
-test[1, ,] == spawning_decay_multiplier$`Upper Sacramento River`
-
-

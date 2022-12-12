@@ -153,5 +153,3 @@ get_weeks_flooded <- function(ws, flow_cfs) {
 
   number_of_weeks[closest_threshold_index]
 }
-
-

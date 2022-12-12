@@ -333,7 +333,7 @@ watershed_offsets <- map_dbl(fallRunDSM::watershed_labels, function(w) {
   }
 }) |> set_names(fallRunDSM::watershed_labels)
 
-watershed_decays <- map2(fallRunDSM::watershed_labels, watershed_offsets, function(w, x) {
+watershed_spawning_decays <- map2(fallRunDSM::watershed_labels, watershed_offsets, function(w, x) {
   
   if (w %in% watersheds_with_decay) {
     dsm_flows |>
@@ -361,7 +361,7 @@ watershed_decays <- map2(fallRunDSM::watershed_labels, watershed_offsets, functi
 }) |> 
   set_names(fallRunDSM::watershed_labels)
 
-usethis::use_data(watershed_decays, overwrite = TRUE)
+usethis::use_data(watershed_spawning_decays, overwrite = TRUE)
 
 watershed_decays$`American River` |> 
   ggplot(aes(date, decay_acres_month, color = decay_type)) + geom_line()

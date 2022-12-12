@@ -955,16 +955,16 @@ NULL
 #' @description Watershed to TRUE/FALSE lookup indicating whether habitat decay occurs.
 "watershed_decay_status"
 
-#' @title Watershed Decays
+#' @title Watershed Spawning Habitat Decays
 #' @description The total decay by watershed. This includes watersheds with no decay, these simply
 #' have all values equal to 0. For watersheds with decay, there are three different curves,
 #' 'min', 'avg', 'max'.
 #' @format a list of 31 dataframes, each dataframe containing accumualted decay for the 20 year simulation
 #' for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds. 
-"watershed_decays"
+"watershed_spawning_decays"
 
 #' @title Spawning Decay Multiplier
-#' @description List of multiplier matrices to be used as decay per month and year.
+#' @description List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
 #' @format list of 31, 12x22 matrices. 
 "spawning_decay_multiplier"
 

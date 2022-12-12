@@ -11,6 +11,6 @@ list of 31, 12x22 matrices.
 spawning_decay_multiplier
 }
 \description{
-List of multiplier matrices to be used as decay per month and year.
+List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
 }
 \keyword{datasets}

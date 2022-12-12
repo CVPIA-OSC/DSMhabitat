@@ -969,6 +969,11 @@ NULL
 "spawning_decay_multiplier"
 
 
+#' @title Spawning Habitat Average
+#' @description habitat average by watershed in acres. This data is used to calcualte decays for all 
+#' watersheds.
+#' @format List of 3 (fr, sr, wr) lenght 31 (watershed) named vectors 
+"spawning_habitat_average"
 
 
 

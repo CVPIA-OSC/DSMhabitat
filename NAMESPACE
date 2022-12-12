@@ -3,7 +3,6 @@
 export(acres_to_square_meters)
 export(apply_suitability)
 export(get_weeks_flooded)
-export(habitat_array_to_dataframe)
 export(set_bypass_habitat)
 export(set_floodplain_habitat)
 export(set_instream_habitat)

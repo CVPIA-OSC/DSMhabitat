@@ -155,21 +155,3 @@ get_weeks_flooded <- function(ws, flow_cfs) {
 }
 
 
-#' @title Habitat Array to Dataframes
-#' @description converts the habitat array (e.g 'fr_spawn') and converts it a list
-#' of dataframes. Each element in the list corresponds to a watershed habitat.
-#' @export
-habitat_array_to_dataframe <- function(habitat_array) {
-  purrr::map(names(habitat_array[,1,1]), function(w) {
-    habitat_array[w,,] |>
-      dplyr::as_tibble() |>
-      dplyr::mutate(month = 1:12) |>
-      tidyr::pivot_longer(-month, names_to = "year", values_to = "habitat_sqm") |>
-      dplyr::mutate(habitat_acres = DSMhabitat::square_meters_to_acres(habitat_sqm),
-                    date = lubridate::ymd(paste0(year, "-", month, "-", lubridate::days_in_month(month)))) |>
-      dplyr::select(date, habitat_acres)
-  }) |>
-    setNames(names(habitat_array[,1,1]))
-}
-
-

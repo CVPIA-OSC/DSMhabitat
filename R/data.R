@@ -959,12 +959,13 @@ NULL
 #' @description The total decay by watershed. This includes watersheds with no decay, these simply
 #' have all values equal to 0. For watersheds with decay, there are three different curves,
 #' 'min', 'avg', 'max'.
-#' @format a list of 31 dataframes, each dataframe containing accumualted decay for the 20 year simulation
+#' @format a list of 31 dataframes, each dataframe containing accumulated decay for the 20 year simulation
 #' for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds. 
 "watershed_spawning_decays"
 
-#' @title Spawning Decay Multiplier
+#' @title Fall-run Spawning Decay Multiplier
 #' @description List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
+#' @details this decay multiplier only exists for Fall-run, Spring and Winter run models rely on probabilistic spawning habitat decay.
 #' @format list of 31, 12x22 matrices. 
 "spawning_decay_multiplier"
 

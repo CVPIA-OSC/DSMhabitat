@@ -963,4 +963,16 @@ NULL
 #' for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds. 
 "watershed_decays"
 
+#' @title Spawning Decay Multiplier
+#' @description List of multiplier matrices to be used as decay per month and year.
+#' @format list of 31, 12x22 matrices. 
+"spawning_decay_multiplier"
+
+
+
+
+
+
+
+
 

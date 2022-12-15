@@ -368,9 +368,6 @@ watershed_spawning_decays$`American River` |>
   mutate(agg_decay = cumsum(-decay_acres_month)) |> 
   ggplot(aes(date, agg_decay, color = decay_type)) + geom_line()
 
-# steps we need to go through to apply the decay on this dataset
-# 1. get the decay amount per watershed, have it filtered to the level min,avg,max,none
-# compute the amount of habitat to be removed
 watershed_decay_level_lookups <- c(
   `Upper Sacramento River` = "min", `Antelope Creek` = "none", 
   `Battle Creek` = "none", `Bear Creek` = "none", `Big Chico Creek` = "none", 

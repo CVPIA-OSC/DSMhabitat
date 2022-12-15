@@ -360,10 +360,10 @@ watershed_spawning_decays <- map2(fallRunDSM::watershed_labels, watershed_offset
 
 usethis::use_data(watershed_spawning_decays, overwrite = TRUE)
 
-watershed_decays$`American River` |> 
+watershed_spawning_decays$`American River` |> 
   ggplot(aes(date, decay_acres_month, color = decay_type)) + geom_line()
 
-watershed_decays$`American River` |> 
+watershed_spawning_decays$`American River` |> 
   group_by(decay_type) |> 
   mutate(agg_decay = cumsum(-decay_acres_month)) |> 
   ggplot(aes(date, agg_decay, color = decay_type)) + geom_line()
@@ -390,7 +390,7 @@ watersheds_with_decay <- names(which(DSMhabitat::watershed_decay_status))
 
 spawning_decay_multiplier <- purrr::map(names(watershed_decay_level_lookups), function(w) {
   if (w %in% watersheds_with_decay) {
-    decay <- DSMhabitat::watershed_decays[[w]] |> 
+    decay <- DSMhabitat::watershed_spawning_decays[[w]] |> 
       dplyr::filter(decay_type == watershed_decay_level_lookups[w]) |> 
       dplyr::mutate(decay_accum = cumsum(decay_acres_month), 
                     decay_mult = 1 - (decay_accum / DSMhabitat::spawning_habitat_average$fr[w]), 

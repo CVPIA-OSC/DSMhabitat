@@ -136,8 +136,7 @@ objective_func <- function(threshold) {
   
   calib_kwk_sed_transport_sim <- calib_kwk_sed_transport |> 
     filter(date >= "2015-01-01", date <= "2017-04-01") |> 
-    mutate(sediment_transport_f3_day = ifelse(is.na(sediment_transport_f3_day), 0, sediment_transport_f3_day), 
-           sediment_transport_f3_day_accum = cumsum(sediment_transport_f3_day),
+    mutate(sediment_transport_f3_day_accum = cumsum(sediment_transport_f3_day),
            current_vol = starting_volume - sediment_transport_f3_day_accum)
   
   last_volume <- calib_kwk_sed_transport_sim |> tail(1) |> pull(current_vol)

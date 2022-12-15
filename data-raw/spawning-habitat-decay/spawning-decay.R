@@ -360,10 +360,10 @@ watershed_spawning_decays <- map2(fallRunDSM::watershed_labels, watershed_offset
 
 usethis::use_data(watershed_spawning_decays, overwrite = TRUE)
 
-watershed_decays$`American River` |> 
+watershed_spawning_decays$`American River` |> 
   ggplot(aes(date, decay_acres_month, color = decay_type)) + geom_line()
 
-watershed_decays$`American River` |> 
+watershed_spawning_decays$`American River` |> 
   group_by(decay_type) |> 
   mutate(agg_decay = cumsum(-decay_acres_month)) |> 
   ggplot(aes(date, agg_decay, color = decay_type)) + geom_line()

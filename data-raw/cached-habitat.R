@@ -968,7 +968,8 @@ spawning_habitat_average <-
   list(
     fr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::fr_spawn$biop_itp_2018_2019, MARGIN = 1, mean)), 
     sr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::sr_spawn$biop_itp_2018_2019, MARGIN = 1, mean)), 
-    wr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::wr_spawn$biop_itp_2018_2019, MARGIN = 1, mean))
+    wr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::wr_spawn$biop_itp_2018_2019, MARGIN = 1, mean)),
+    lfr = DSMhabitat::square_meters_to_acres(apply(DSMhabitat::lfr_spawn$biop_itp_2018_2019, MARGIN = 1, mean))
   )
 
 usethis::use_data(spawning_habitat_average, overwrite = TRUE)

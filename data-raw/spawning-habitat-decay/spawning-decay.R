@@ -66,7 +66,6 @@ rating_curve <- rating_curves_by_rm |>
   ungroup() |> 
   mutate(flow_cfd = flow_cfs * 86400)
 
-rating_curve_for_calib <- rating_curve
 
 
 # extrapolate a lower bound to the curve at 0,0
@@ -80,7 +79,6 @@ srh2d_upper_sac_rating_curves <- rating_curve |>
           sed_ft3_per_second_avg = 0, 
           sed_ft3_per_second_max = 0
   )
-
 
 usethis::use_data(srh2d_upper_sac_rating_curves, overwrite = TRUE)
 
@@ -116,14 +114,14 @@ kwk_usgs <- read_rds("data-raw/spawning-habitat-decay/data/kwk-flows-1980-2022.r
 objective_func <- function(threshold) {
   
   # scale down the tranport curves to just the d50mm threshold of movement
-  scaled_sed_transport <- rating_curve_for_calib$sed_ft3_per_day_min * 
+  scaled_sed_transport <- rating_curve$sed_ft3_per_day_min * 
     DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction
   
   # create an approxfun given a threshold of movement (this value will be searched by the optim function)
-  calib_sed_curve <- approxfun(rating_curve_for_calib$flow_cfs, 
+  calib_sed_curve <- approxfun(rating_curve$flow_cfs, 
                                scaled_sed_transport * 
                                  rep(threshold, 
-                                     length(rating_curve_for_calib$flow_cfs)))
+                                     length(rating_curve$flow_cfs)))
   
   # convert square meters to cubic feet, assume 2ft depth
   starting_volume <- (254690.3 * 10.764) * 2

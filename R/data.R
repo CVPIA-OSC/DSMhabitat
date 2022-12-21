@@ -963,17 +963,17 @@ NULL
 #' for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds. 
 "watershed_spawning_decays"
 
-#' @title Fall-run Spawning Decay Multiplier
+#' @title Spawning Decay Multipliers
 #' @description List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
 #' @details this decay multiplier only exists for Fall-run, Spring and Winter run models rely on probabilistic spawning habitat decay.
-#' @format list of 31, 12x22 matrices. 
+#' @format array 31x22x12
 "spawning_decay_multiplier"
 
 
 #' @title Spawning Habitat Average
 #' @description habitat average by watershed in acres. This data is used to calcualte decays for all 
 #' watersheds.
-#' @format List of 3 (fr, sr, wr) lenght 31 (watershed) named vectors 
+#' @format List of 3 (fr, sr, wr) lenght 31 (watershed) named vectors
 "spawning_habitat_average"
 
 

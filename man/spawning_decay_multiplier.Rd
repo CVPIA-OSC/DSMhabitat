@@ -3,9 +3,9 @@
 \docType{data}
 \name{spawning_decay_multiplier}
 \alias{spawning_decay_multiplier}
-\title{Fall-run Spawning Decay Multiplier}
+\title{Spawning Decay Multipliers}
 \format{
-list of 31, 12x22 matrices.
+array 31x22x12
 }
 \usage{
 spawning_decay_multiplier

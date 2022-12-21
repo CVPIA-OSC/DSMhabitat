@@ -193,7 +193,7 @@ grid.arrange(p2, p1, nrow = 2)
 
 
 # apply to upper sac 
-upper_sac_flows_dsm <- DSMflow::flows_cfs$biop_itp_2018_2019 |> 
+upper_sac_flows_dsm <- DSMflow::flows_cfs$biop_2008_2009 |> 
   filter(year(date) >= 1979, year(date) <= 2000) |> 
   select(date, flow = `Upper Sacramento River`)
 
@@ -330,6 +330,8 @@ watershed_offsets <- map_dbl(fallRunDSM::watershed_labels, function(w) {
   }
 }) |> set_names(fallRunDSM::watershed_labels)
 
+# watershed_offsets["Upper Sacramento River"] <- 0
+
 watershed_spawning_decays <- map2(fallRunDSM::watershed_labels, watershed_offsets, function(w, x) {
   
   if (w %in% watersheds_with_decay) {
@@ -383,11 +385,15 @@ watershed_decay_level_lookups <- c(
 )
 
 
+# to filled with mults for each run
+spawning_decay_multiplier <- vector(mode = "list")
+
+
 watersheds_with_decay <- names(which(DSMhabitat::watershed_decay_status))
 
-spawning_decay_multiplier <- purrr::map(names(watershed_decay_level_lookups), function(w) {
+fall_run_spawning_decay_mult <- purrr::map(names(watershed_decay_level_lookups), function(w) {
   if (w %in% watersheds_with_decay) {
-    decay <- DSMhabitat::watershed_spawning_decays[[w]] |> 
+    decay <- watershed_spawning_decays[[w]] |> 
       dplyr::filter(decay_type == watershed_decay_level_lookups[w]) |> 
       dplyr::mutate(decay_accum = cumsum(decay_acres_month), 
                     decay_mult = 1 - (decay_accum / DSMhabitat::spawning_habitat_average$fr[w]), 
@@ -404,4 +410,20 @@ spawning_decay_multiplier <- purrr::map(names(watershed_decay_level_lookups), fu
 }) |> 
   setNames(names(watershed_decay_level_lookups))
 
+fr_spawning_decay_array <- array(data = NA, dim = c(31, 12, 22), 
+                                 dimnames = list(fallRunDSM::watershed_labels, 
+                                                 month.abb,
+                                                 1979:2000))
+
+# fill in the array 31(watersheds) X 22(years) X 12(months)
+for (i in 1:31) {
+  fr_spawning_decay_array[i, , ] <- fall_run_spawning_decay_mult[[i]]
+}
+
+spawning_decay_multiplier$fr <- fr_spawning_decay_array
+
+
+fall_run_spawning_decay_mult$`Upper Sacramento River`
+
 usethis::use_data(spawning_decay_multiplier, overwrite = TRUE)
+

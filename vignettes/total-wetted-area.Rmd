@@ -2,7 +2,7 @@
 title: "Remotely Sensed Wetted Channel Areas"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Theoretical Max Habitat Areas}
+  %\VignetteIndexEntry{Remotely Sensed Wetted Channel Areas}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

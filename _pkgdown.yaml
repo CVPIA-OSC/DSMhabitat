@@ -95,6 +95,8 @@ navbar:
         href: articles/habitat-extents-map.html
       - text: 'Remotely Sensed Wetted Channel Areas'
         href: articles/total-wetted-area.html
+      # - text: 'Spawning Habitat Decay'     #TODO write up this article to show the analysis 
+      #   href: articles/spawning-habitat-decay.html
   - text: 'News'
     href: news/index.html
 

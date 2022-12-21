@@ -28,4 +28,4 @@ delta_rearing_habitat
 A dataset containing the area of highly suitable habitat within the
 North and South Deltas
 }
-\keyword{datasets}
+\keyword{internal}

@@ -476,6 +476,7 @@ NULL
 #'   \item Delta Node Selection: Mark Tompkins \email{mtompkins@@flowwest.com}
 #'   \item Data Wrangling: Sadie Gill \email{sgill@@flowwest.com}
 #' }
+#' @keywords internal
 'delta_rearing_habitat'
 
 # OTHER-------------
@@ -945,4 +946,39 @@ NULL
 #' @rdname estimated_probs
 #' @format NULL
 "prob_nest_scoured"
+
+
+#' @title Gravel size to proportion of movement
+"gravel_size_to_prop_of_movement"
+
+#' @title Watershed Decay Status
+#' @description Watershed to TRUE/FALSE lookup indicating whether habitat decay occurs.
+"watershed_decay_status"
+
+#' @title Watershed Spawning Habitat Decays
+#' @description The total decay by watershed. This includes watersheds with no decay, these simply
+#' have all values equal to 0. For watersheds with decay, there are three different curves,
+#' 'min', 'avg', 'max'.
+#' @format a list of 31 dataframes, each dataframe containing accumulated decay for the 20 year simulation
+#' for each curve level ('min', 'avg', 'max') or 'none' for non-decay watersheds. 
+"watershed_spawning_decays"
+
+#' @title Spawning Decay Multipliers
+#' @description List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
+#' @details this decay multiplier only exists for Fall-run, Spring and Winter run models rely on probabilistic spawning habitat decay.
+#' @format array 31x22x12
+"spawning_decay_multiplier"
+
+
+#' @title Spawning Habitat Average
+#' @description habitat average by watershed in acres. This data is used to calcualte decays for all 
+#' watersheds.
+#' @format List of 3 (fr, sr, wr) lenght 31 (watershed) named vectors
+"spawning_habitat_average"
+
+
+
+
+
+
 

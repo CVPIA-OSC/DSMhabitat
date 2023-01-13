@@ -10,6 +10,9 @@
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/articles/floodplain-modeling.html</loc>
   </url>
   <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat/articles/flow-driven-spawning-decay.html</loc>
+  </url>
+  <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/articles/habitat-extents-map.html</loc>
   </url>
   <url>
@@ -112,13 +115,25 @@
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/spawn.html</loc>
   </url>
   <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/spawning_decay_multiplier.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/spawning_habitat_average.html</loc>
+  </url>
+  <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/square_meters_to_acres.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/watershed_decay_status.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/watershed_lengths.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/watershed_routing_indicators.html</loc>
+  </url>
+  <url>
+    <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/watershed_spawning_decays.html</loc>
   </url>
   <url>
     <loc>https://CVPIA-OSC.github.io/DSMhabitat/reference/weeks_flooded.html</loc>

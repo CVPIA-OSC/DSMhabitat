@@ -1,0 +1,185 @@
+---
+title: "Spawning Decay Analysis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Spawning Decay Analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>", 
+  message = FALSE,
+  warning = FALSE
+)
+
+library(tidyverse)
+library(gt)
+library(gridExtra)
+library(lubridate)
+
+theme_set(theme_bw())
+
+```
+
+```{r setup}
+library(DSMhabitat)
+```
+
+# Objective 
+
+The objective of this analysis is to create flow-decay curves that will be applied to spawning habitat values at runtime in DSM models. The SRH2D model developed as part of the Sediment Study for the Upper Sacramento River serves as the starting point for these curves. Additional "scale-downs" are performed to reduce the magnitude of the curves in order to better match the observed relationship at each watershed where the analysis is applied. Each step in the analysis is detailed below.
+
+# SRH2D Flow-Sediment Transport Curves 
+
+Flow-to-sediment transport curves were obtained from the SRH2D model output. In total, there are 45 files, each representing a river mile. Each file contains 3 flow-to-sediment curves (in cubic meters per second) for three curve types: Parker, Wilcock, and Gaeuman. A sample output at river mile 283.330 is shown below.
+
+```{r}
+
+files_to_read <- list.files(system.file("extdata", "spawning-decay", "SedimentRatingCurves", 
+                                        package = "DSMhabitat", mustWork = TRUE),
+                            pattern = ".txt", 
+                            full.names = TRUE)
+
+rating_curves_by_rm <- map_df(files_to_read, function(x) {
+  river_mile <- str_match(basename(x), "[0-9]+\\.?[0-9]+")[,1]
+  read_tsv(x, skip = 1, col_names = c("flow", "parker_qs", "wilcock_qs", "gaeuman_qs")) |> 
+    mutate(river_mile = as.numeric(river_mile))
+})
+
+rating_curves_by_rm |> 
+  filter(river_mile == 283.330) |> 
+  knitr::kable()
+```
+
+
+All data was converted to cubic feet per second and two levels of summaries were performed. First, at each river mile, the minimum, average, and maximum values for transport were calculated across the three different curve types. Then, an average of transport was calculated for each combination of flow and minimum, mean, and maximum transport values across all the river miles. The code for the calculation is outlined below.
+
+
+```{r}
+rating_curve <- rating_curves_by_rm |> 
+  rename(flow_cms = flow) |> 
+  pivot_longer(parker_qs:gaeuman_qs, names_to = "curve", values_to = "transport_m3_per_second") |> 
+  mutate(
+    flow_cfs = 35.315 * flow_cms,
+    flow_cfd = flow_cfs * 86400, # cubic feet per day
+    transport_ft3_per_second = 35.315 * transport_m3_per_second,
+    transport_ft3_per_day = 86400 * transport_ft3_per_second # transport per day
+  ) |> 
+  group_by(flow_cfs, river_mile) |> # summary across 3 curve types 
+  summarise(
+    sed_ft3_per_second_min = min(transport_ft3_per_second), 
+    sed_ft3_per_second_avg = mean(transport_ft3_per_second),
+    sed_ft3_per_second_max = max(transport_ft3_per_second),    
+    sed_ft3_per_day_min = min(transport_ft3_per_day), 
+    sed_ft3_per_day_avg = mean(transport_ft3_per_day),
+    sed_ft3_per_day_max = max(transport_ft3_per_day)
+  ) |> 
+  ungroup() |> 
+  group_by(flow_cfs) |> # summary across all river miles
+  summarise(
+    sed_ft3_per_second_min = mean(sed_ft3_per_second_min), 
+    sed_ft3_per_second_avg = mean(sed_ft3_per_second_avg),
+    sed_ft3_per_second_max = mean(sed_ft3_per_second_max),
+    sed_ft3_per_day_min = mean(sed_ft3_per_day_min), 
+    sed_ft3_per_day_avg = mean(sed_ft3_per_day_avg),
+    sed_ft3_per_day_max = mean(sed_ft3_per_day_max),
+  ) |>
+  ungroup() |> 
+  mutate(flow_cfd = flow_cfs * 86400)
+```
+
+
+```{r, echo=FALSE}
+# extrapolate a lower bound to the curve at 0,0
+srh2d_upper_sac_rating_curves <- rating_curve |> 
+  add_row(flow_cfs = 0,
+          flow_cfd = 0,
+          sed_ft3_per_day_min = 0, 
+          sed_ft3_per_day_avg = 0, 
+          sed_ft3_per_day_max = 0, 
+          sed_ft3_per_second_min = 0, 
+          sed_ft3_per_second_avg = 0, 
+          sed_ft3_per_second_max = 0
+  )
+
+srh2d_upper_sac_rating_curves %>% 
+  pivot_longer(names_to = "curve", 
+               values_to = "sediment_transport", 
+               sed_ft3_per_second_min:sed_ft3_per_second_max) %>%
+  mutate(
+    curve_label = case_when(
+      curve == "sed_ft3_per_second_min" ~ "Min (CFS)",
+      curve == "sed_ft3_per_second_avg" ~ "Avg (CFS)",
+      curve == "sed_ft3_per_second_max" ~ "Max (CFS)",
+    ), 
+    curve_label = factor(curve_label, 
+                         levels = c(
+                           "Max (CFS)",
+                           "Avg (CFS)",
+                           "Min (CFS)"
+                         ))) %>% 
+  ggplot(aes(flow_cfs, sediment_transport, color = curve_label)) + 
+  geom_line(size = 1.5) + 
+  geom_point(size = 2.5) + 
+  labs(x = "flow (cfs)", y = "Sediment Transport (cfs)", 
+       title = "Sediment Transport Capacity Rating Curves", 
+       subtitle = "Flow (cfs) to Transport (cfs)",
+       color = NULL) + 
+  theme_bw() + 
+  theme(legend.position="bottom") 
+```
+
+
+# Curve Scale-downs
+
+A series of scale-downs were performed next. The specific procedures for each scale-down are outlined in this section.
+
+## Gravel size based scaledown
+
+The first scale-down was based on a flow-to-gravel size movement curve. Specifically, a curve that, given a flow and size of gravel, outputs the proportion of gravel that is moving. The curve was obtained from digitizing a bar plot in the Gravel Study for the Upper Sacramento River. In order to make it compatible with the flow-to-transport curves above, we again summarized to a min, mean, and max across the four reaches. 
+
+[](`r system.file("extdata", ")`)
+
+```{r}
+gravel_size_scaledown <- read_csv(system.file("extdata", "spawning-decay", "sediment-prop-move.csv", 
+                                              package = "DSMhabitat", mustWork = TRUE))
+
+gravel_size_to_prop_of_movement <- gravel_size_scaledown |> 
+  mutate(
+    flow_cfs = flow_m3s * 35.315,
+    flow_cfday = flow_cfs * 86400) |> 
+  group_by(flow_cfs) |> 
+  summarise(
+    min_fraction = min(fraction), 
+    avg_fraction = mean(fraction),
+    max_fraction = max(fraction)
+  ) 
+
+knitr::kable(gravel_size_to_prop_of_movement)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

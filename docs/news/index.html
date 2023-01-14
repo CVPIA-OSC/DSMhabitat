@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">DSMhabitat</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">2.0</span>
       </span>
     </div>
 
@@ -39,9 +39,6 @@
     </li>
     <li>
       <a href="../articles/total-wetted-area.html">Remotely Sensed Wetted Channel Areas</a>
-    </li>
-    <li>
-      <a href="../articles/spawning-habitat-decay.html">Spawning Habitat Decay</a>
     </li>
   </ul></li>
 <li>
@@ -67,6 +64,23 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="2.0" id="dsmhabitat-20">DSMhabitat 2.0<a class="anchor" aria-label="anchor" href="#dsmhabitat-20"></a></h2>
+<p>The 2022 update to DSMhabitat includes the following changes:</p>
+<ul><li>
+<strong>Fall Run spawning habitat decay updates</strong>. A new analysis for spawning habitat decay has been added to the package. In doing so a few datasets have been added to the package as well as a new script under <code>data-raw/spawning-habitat-decay</code> that described the new habitat calculations. The following data has been added along with correspondings documentations:
+<ul><li>
+<code><a href="../reference/watershed_spawning_decays.html">DSMhabitat::watershed_spawning_decays</a></code> - dataframes with raw decay for three calcualted curves</li>
+<li>
+<code><a href="../reference/watershed_decay_status.html">DSMhabitat::watershed_decay_status</a></code> - a convinience dataframe that shows whether a given watershed has spawning decay or not.</li>
+<li>
+<code><a href="../reference/spawning_habitat_average.html">DSMhabitat::spawning_habitat_average</a></code> - a convinience dataset with average spawning habitat by watershed and run.</li>
+<li>
+<code><a href="../reference/spawning_decay_multiplier.html">DSMhabitat::spawning_decay_multiplier</a></code> - a datset cotaining 31 watershed decay multipliers. Currently this cotains only Fall-run values.</li>
+</ul></li>
+<li>
+<strong>CALSIM updates</strong>. Update DSMhabitat datasets integrating in new 2019 biop flows. The result of doing so means each dataset that is generated using flow as an input will have the following form: <code>fr_fp$biop_2008_2009</code> and <code>fr_fp$biop_itp_2018_2019</code>.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="1.0" id="dsmhabitat-10">DSMhabitat 1.0<a class="anchor" aria-label="anchor" href="#dsmhabitat-10"></a></h2>
 <p>Habitat related datasets for use with the following DSM models:</p>
 <ul><li><a href="https://github.com/CVPIA-OSC/fallRunDSM/releases/tag/v2.0" class="external-link">Fall Run DSM (v2.0)</a></li>
@@ -88,7 +102,7 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by Sadie Gill, Emanuel Rodriguez, Mark Tompkins.</p>
+  <p></p><p>Developed by Emanuel Rodriguez, Erin Cain, Mark Tompkins, Sadie Gill.</p>
 </div>
 
 <div class="pkgdown">

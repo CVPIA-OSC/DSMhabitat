@@ -41,6 +41,11 @@ reference:
   - weeks_inundated
   - inchannel_habitat_adult
   - pools
+  - gravel_size_to_prop_of_movement
+  - spawning_decay_multiplier 
+  - spawning_habitat_average 
+  - watershed_decay_status 
+  - watershed_spawning_decays
 - title: Model Input Data
   desc: Data used directly as inputs to the DSM model
   contents:

@@ -106,24 +106,25 @@ srh2d_upper_sac_rating_curves <- rating_curve |>
   )
 
 srh2d_upper_sac_rating_curves %>% 
+  select(flow_cfs, sed_ft3_per_day_min:sed_ft3_per_day_max) |> 
   pivot_longer(names_to = "curve", 
-               values_to = "sediment_transport", 
-               sed_ft3_per_second_min:sed_ft3_per_second_max) %>%
+               values_to = "sediment_transport", -flow_cfs) %>%
   mutate(
     curve_label = case_when(
-      curve == "sed_ft3_per_second_min" ~ "Min (CFS)",
-      curve == "sed_ft3_per_second_avg" ~ "Avg (CFS)",
-      curve == "sed_ft3_per_second_max" ~ "Max (CFS)",
+      curve == "sed_ft3_per_day_min" ~ "Min (CFD)",
+      curve == "sed_ft3_per_day_avg" ~ "Avg (CFD)",
+      curve == "sed_ft3_per_day_max" ~ "Max (CFD)",
     ), 
     curve_label = factor(curve_label, 
                          levels = c(
-                           "Max (CFS)",
-                           "Avg (CFS)",
-                           "Min (CFS)"
+                           "Min (CFD)",
+                           "Avg (CFD)",
+                           "Max (CFD)"
                          ))) %>% 
   ggplot(aes(flow_cfs, sediment_transport, color = curve_label)) + 
   geom_line(size = 1.5) + 
   geom_point(size = 2.5) + 
+  scale_y_continuous(labels = scales::comma) |> 
   labs(x = "flow (cfs)", y = "Sediment Transport (cfs)", 
        title = "Sediment Transport Capacity Rating Curves", 
        subtitle = "Flow (cfs) to Transport (cfs)",
@@ -139,9 +140,8 @@ A series of scale-downs were performed next. The specific procedures for each sc
 
 ## Gravel size based scaledown
 
-The first scale-down was based on a flow-to-gravel size movement curve. Specifically, a curve that, given a flow and size of gravel, outputs the proportion of gravel that is moving. The curve was obtained from digitizing a bar plot in the Gravel Study for the Upper Sacramento River. In order to make it compatible with the flow-to-transport curves above, we again summarized to a min, mean, and max across the four reaches. 
+The initial reduction in scale was based on a flow-to-gravel size movement curve, which, given the flow and size of gravel, calculates the proportion of gravel that is moving. This curve was obtained by digitizing a bar plot from the Gravel Study for the Upper Sacramento River. To align it with the flow-to-transport curves, we calculated the minimum, mean, and maximum values across the four reaches, and interpolated flows to match those in the flow-to-transport curves.
 
-[](`r system.file("extdata", ")`)
 
 ```{r}
 gravel_size_scaledown <- read_csv(system.file("extdata", "spawning-decay", "sediment-prop-move.csv", 
@@ -156,23 +156,240 @@ gravel_size_to_prop_of_movement <- gravel_size_scaledown |>
     min_fraction = min(fraction), 
     avg_fraction = mean(fraction),
     max_fraction = max(fraction)
-  ) 
+  ) |> 
+  bind_rows(
+    tibble(flow_cfs = 0, min_fraction = 0, avg_fraction = 0, max_fraction = 0) # adds 0,0,0 case to match transport curves
+  )
 
 knitr::kable(gravel_size_to_prop_of_movement)
 
 ```
 
+```{r}
+gravel_size_to_prop_of_movement |> 
+  pivot_longer(names_to = "prop_type", values_to = "Proportion able to Move", -flow_cfs) |> 
+  ggplot(aes(flow_cfs, `Proportion able to Move`, color = prop_type)) +  
+  geom_line(size = 1.5) + 
+  geom_point(size = 2.5) 
+```
 
 
+### First Scaledown Curve Application
+
+The method we use to generate these scaled-down curves is the `approxfun` function generator in R. The following outlines the process. Note that at this point we must choose between one of three (min, mean, max) curves to use as the input into `approxfun`. 
 
 
+```{r}
+# using the min
+
+min_sfd_gravel_size_red <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_min * 
+    gravel_size_to_prop_of_movement$avg_fraction
+)
+avg_sfd_gravel_size_red <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_avg * 
+    gravel_size_to_prop_of_movement$avg_fraction
+)
+max_sfd_gravel_size_red <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_max * 
+    gravel_size_to_prop_of_movement$avg_fraction
+)
+
+```
 
 
+We can recalculate the transport curves with this scaledown by apply our generated functions above.
+
+```{r}
+min_sfd_with_gravel_scale <- tibble(
+  flow_cfs = srh2d_upper_sac_rating_curves$flow_cfs, 
+  transport_cfd = min_sfd_gravel_size_red(flow_cfs), 
+  type = "min"
+)
+
+avg_sfd_with_gravel_scale <- tibble(
+  flow_cfs = srh2d_upper_sac_rating_curves$flow_cfs, 
+  transport_cfd = avg_sfd_gravel_size_red(flow_cfs), 
+  type = "mean"
+)
+
+max_sfd_with_gravel_scale <- tibble(
+  flow_cfs = srh2d_upper_sac_rating_curves$flow_cfs, 
+  transport_cfd = max_sfd_gravel_size_red(flow_cfs), 
+  type = "max"
+)
+
+transport_scaled_by_gravel <- bind_rows(
+  min_sfd_with_gravel_scale, 
+  avg_sfd_with_gravel_scale, 
+  max_sfd_with_gravel_scale
+)
 
 
+transport_scaled_by_gravel |> 
+  ggplot(aes(flow_cfs, transport_cfd, color=type)) + geom_line(size = 1.5) + 
+  geom_point(size = 2.5) 
+
+```
 
 
+## Storm Observed based Scaledown
 
+The next scale-down is based on observed sediment transport and Market Bridge within the Upper Sacramento River. The approach is to develop a scale-down factor that allows the curves to match this observed event. The setup is simple: we start with a known amount of gravel and a known date at which the gravel was moved away. We create a function out of this process and feed it into an optimization process that finds the scale-down value that best matches the event.
+
+
+```{r}
+kwk_usgs <- read_rds(system.file("extdata", "spawning-decay", "kwk-flows-1980-2022.rds", 
+                                 package = "DSMhabitat", mustWork = TRUE))
+
+objective_func <- function(threshold) {
+  
+  # scale down the tranport curves to just the d50mm threshold of movement
+  scaled_sed_transport <- srh2d_upper_sac_rating_curves$sed_ft3_per_day_min * 
+    gravel_size_to_prop_of_movement$avg_fraction
+  
+  # create an approxfun given a threshold of movement (this value will be searched by the optim function)
+  calib_sed_curve <- approxfun(srh2d_upper_sac_rating_curves$flow_cfs, 
+                               scaled_sed_transport * 
+                                 rep(threshold, # <----- this value is searched 
+                                     length(srh2d_upper_sac_rating_curves$flow_cfs)))
+  
+  # convert square meters to cubic feet, assume 2ft depth
+  starting_volume <- (254690.3 * 10.764) * 2
+  
+  calib_kwk_sed_transport <- tibble(
+    date = kwk_usgs$Date, 
+    flow = kwk_usgs$Flow, 
+    sediment_transport_f3_day = calib_sed_curve(flow)
+  ) |> 
+    mutate(sediment_transport_f3_day = ifelse(is.na(sediment_transport_f3_day), 0, sediment_transport_f3_day))
+  
+  
+  calib_kwk_sed_transport_sim <- calib_kwk_sed_transport |> 
+    filter(date >= "2015-01-01", date <= "2017-04-01") |> 
+    mutate(sediment_transport_f3_day_accum = cumsum(sediment_transport_f3_day),
+           current_vol = starting_volume - sediment_transport_f3_day_accum)
+  
+  # get the last value for volume
+  last_volume <- calib_kwk_sed_transport_sim |> tail(1) |> pull(current_vol)
+  
+  # return absolute distance to zero
+  return(abs(last_volume - 0))
+}
+
+
+# We want to optimize the function by the threshold value that results
+# in the volumne nearest zero.
+result <- optimise(objective_func, interval = c(0, 1), maximum = FALSE)
+
+
+```
+
+The `optimise` function returns: Scale-down value: **0.5099701**, which gets us within **177.844** cubic feet of zero. We can evaluate this fit by plotting both the flow and volume decay on the same axis.
+
+
+```{r}
+sac_river_observation_scaledown <- result$minimum
+
+# create a new curve with this scaledown applied
+flow_cfs_to_sed_cfd_calibrated <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_min * 
+    gravel_size_to_prop_of_movement$avg_fraction * 
+    rep(sac_river_observation_scaledown, 
+        length(srh2d_upper_sac_rating_curves$flow_cfs))
+)
+
+calibrated_kwk_sed_transport <- tibble(
+  date = kwk_usgs$Date, 
+  flow = kwk_usgs$Flow, 
+  sediment_transport_f3_day = flow_cfs_to_sed_cfd_calibrated(flow)
+) |> 
+  mutate(sediment_transport_f3_day = ifelse(is.na(sediment_transport_f3_day), 0, sediment_transport_f3_day))
+
+
+starting_volume <- (254690.3 * 10.764) * 2
+
+kwk_sed_transport_sim <- calibrated_kwk_sed_transport |> 
+  filter(date >= "2015-01-01", date <= "2017-04-01") |> 
+  mutate(sediment_transport_f3_day = ifelse(is.na(sediment_transport_f3_day), 0, sediment_transport_f3_day), 
+         sediment_transport_f3_day_accum = cumsum(sediment_transport_f3_day),
+         start_vol = starting_volume,
+         current_vol = start_vol - sediment_transport_f3_day_accum)
+
+p1 <- kwk_sed_transport_sim |> 
+  ggplot() + 
+  geom_line(aes(date, current_vol)) + 
+  labs(x = "", y = "Spawning Habitat Vol. (cubic feet)") + 
+  theme_bw()
+
+p2 <- kwk_usgs |> 
+  filter(Date >= "2015-01-01", Date <= "2017-04-01") |> ggplot(aes(Date, Flow)) + geom_line() + 
+  theme_bw()
+
+# plot to confirm scaledown did the right thing
+grid.arrange(p2, p1, nrow = 2)
+```
+
+
+### Second update to the transport curves
+
+At this point, we can apply both scale-downs (gravel size and observed) to update our current transport curves. To do this, we simply apply both scale-downs in the function generation call to `approxfun`.
+
+
+```{r}
+min_sfd_gravel_obs <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_min * 
+    gravel_size_to_prop_of_movement$avg_fraction * result$minimum
+)
+
+avg_sfd_gravel_obs <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_avg * 
+    gravel_size_to_prop_of_movement$avg_fraction * result$minimum
+)
+
+max_sfd_gravel_obs <- approxfun(
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_max * 
+    gravel_size_to_prop_of_movement$avg_fraction * result$minimum
+)
+
+min_sfd_with_gravel_obs <- tibble(
+  flow_cfs = srh2d_upper_sac_rating_curves$flow_cfs, 
+  transport_cfd = min_sfd_gravel_obs(flow_cfs), 
+  type = "min"
+)
+
+avg_sfd_with_gravel_obs <- tibble(
+  flow_cfs = srh2d_upper_sac_rating_curves$flow_cfs, 
+  transport_cfd = avg_sfd_gravel_obs(flow_cfs), 
+  type = "mean"
+)
+
+max_sfd_with_gravel_obs <- tibble(
+  flow_cfs = srh2d_upper_sac_rating_curves$flow_cfs, 
+  transport_cfd = max_sfd_gravel_obs(flow_cfs), 
+  type = "max"
+)
+
+transport_scaled_by_gravel_obs <- bind_rows(
+  min_sfd_with_gravel_obs, 
+  avg_sfd_with_gravel_obs, 
+  max_sfd_with_gravel_obs
+)
+
+
+transport_scaled_by_gravel_obs |> 
+  ggplot(aes(flow_cfs, transport_cfd, color=type)) + geom_line(size = 1.5) + 
+  geom_point(size = 2.5) + 
+  scale_y_continuous(labels = scales::comma)
+
+```
 
 
 

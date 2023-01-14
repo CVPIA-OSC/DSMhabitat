@@ -149,7 +149,7 @@ sac_river_observation_scaledown <- result$minimum
 
 # create a new curve with this scaledown applied
 flow_cfs_to_sed_cfd_calibrated <- approxfun(
-  x = rating_curve$flow_cfs, 
+  x = srh$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_min * 
     DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
     rep(sac_river_observation_scaledown, 

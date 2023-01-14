@@ -250,14 +250,13 @@ for each scale-down are outlined in this section.</p>
 <div class="section level3">
 <h3 id="gravel-size-based-scaledown">Gravel size based scaledown<a class="anchor" aria-label="anchor" href="#gravel-size-based-scaledown"></a>
 </h3>
-<p>The first scale-down was based on a flow-to-gravel size movement
-curve. Specifically, a curve that, given a flow and size of gravel,
-outputs the proportion of gravel that is moving. The curve was obtained
-from digitizing a bar plot in the Gravel Study for the Upper Sacramento
-River. In order to make it compatible with the flow-to-transport curves
-above, we again summarized to a min, mean, and max across the four
-reaches.</p>
-<p><a href="assets/gravel-scaledown-source.png"></a></p>
+<p>The initial reduction in scale was based on a flow-to-gravel size
+movement curve, which, given the flow and size of gravel, calculates the
+proportion of gravel that is moving. This curve was obtained by
+digitizing a bar plot from the Gravel Study for the Upper Sacramento
+River. To align it with the flow-to-transport curves, we calculated the
+minimum, mean, and maximum values across the four reaches, and
+interpolated flows to match those in the flow-to-transport curves.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gravel_size_scaledown</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"spawning-decay"</span>, <span class="st">"sediment-prop-move.csv"</span>, </span>
 <span>                                              package <span class="op">=</span> <span class="st">"DSMhabitat"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
@@ -271,7 +270,10 @@ reaches.</p>
 <span>    min_fraction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">fraction</span><span class="op">)</span>, </span>
 <span>    avg_fraction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">fraction</span><span class="op">)</span>,</span>
 <span>    max_fraction <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">fraction</span><span class="op">)</span></span>
-<span>  <span class="op">)</span> </span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">bind_rows</span><span class="op">(</span></span>
+<span>    <span class="fu">tibble</span><span class="op">(</span>flow_cfs <span class="op">=</span> <span class="fl">0</span>, min_fraction <span class="op">=</span> <span class="fl">0</span>, avg_fraction <span class="op">=</span> <span class="fl">0</span>, max_fraction <span class="op">=</span> <span class="fl">0</span><span class="op">)</span> <span class="co"># adds 0,0,0 case to match transport curves</span></span>
+<span>  <span class="op">)</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">gravel_size_to_prop_of_movement</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -330,8 +332,237 @@ reaches.</p>
 <td align="right">0.5421749</td>
 <td align="right">0.7603439</td>
 </tr>
+<tr class="odd">
+<td align="right">0.00</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+<td align="right">0.0000000</td>
+</tr>
 </tbody>
 </table>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">gravel_size_to_prop_of_movement</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">pivot_longer</span><span class="op">(</span>names_to <span class="op">=</span> <span class="st">"prop_type"</span>, values_to <span class="op">=</span> <span class="st">"Proportion able to Move"</span>, <span class="op">-</span><span class="va">flow_cfs</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">flow_cfs</span>, <span class="va">`Proportion able to Move`</span>, color <span class="op">=</span> <span class="va">prop_type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  </span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> </span></code></pre></div>
+<p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
+<div class="section level4">
+<h4 id="first-scaledown-curve-application">First Scaledown Curve Application<a class="anchor" aria-label="anchor" href="#first-scaledown-curve-application"></a>
+</h4>
+<p>The method we use to generate these scaled-down curves is the
+<code>approxfun</code> function generator in R. The following outlines
+the process. Note that at this point we must choose between one of three
+(min, mean, max) curves to use as the input into
+<code>approxfun</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># using the min</span></span>
+<span></span>
+<span><span class="va">min_sfd_gravel_size_red</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_min</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">avg_sfd_gravel_size_red</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_avg</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">max_sfd_gravel_size_red</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_max</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>We can recalculate the transport curves with this scaledown by apply
+our generated functions above.</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">min_sfd_with_gravel_scale</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  flow_cfs <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  transport_cfd <span class="op">=</span> <span class="fu">min_sfd_gravel_size_red</span><span class="op">(</span><span class="va">flow_cfs</span><span class="op">)</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">"min"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">avg_sfd_with_gravel_scale</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  flow_cfs <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  transport_cfd <span class="op">=</span> <span class="fu">avg_sfd_gravel_size_red</span><span class="op">(</span><span class="va">flow_cfs</span><span class="op">)</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">"mean"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">max_sfd_with_gravel_scale</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  flow_cfs <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  transport_cfd <span class="op">=</span> <span class="fu">max_sfd_gravel_size_red</span><span class="op">(</span><span class="va">flow_cfs</span><span class="op">)</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">"max"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">transport_scaled_by_gravel</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span></span>
+<span>  <span class="va">min_sfd_with_gravel_scale</span>, </span>
+<span>  <span class="va">avg_sfd_with_gravel_scale</span>, </span>
+<span>  <span class="va">max_sfd_with_gravel_scale</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">transport_scaled_by_gravel</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">flow_cfs</span>, <span class="va">transport_cfd</span>, color<span class="op">=</span><span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> </span></code></pre></div>
+<p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
+</div>
+</div>
+<div class="section level3">
+<h3 id="storm-observed-based-scaledown">Storm Observed based Scaledown<a class="anchor" aria-label="anchor" href="#storm-observed-based-scaledown"></a>
+</h3>
+<p>The next scale-down is based on observed sediment transport and
+Market Bridge within the Upper Sacramento River. The approach is to
+develop a scale-down factor that allows the curves to match this
+observed event. The setup is simple: we start with a known amount of
+gravel and a known date at which the gravel was moved away. We create a
+function out of this process and feed it into an optimization process
+that finds the scale-down value that best matches the event.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">kwk_usgs</span> <span class="op">&lt;-</span> <span class="fu">read_rds</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"spawning-decay"</span>, <span class="st">"kwk-flows-1980-2022.rds"</span>, </span>
+<span>                                 package <span class="op">=</span> <span class="st">"DSMhabitat"</span>, mustWork <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">objective_func</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">threshold</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="co"># scale down the tranport curves to just the d50mm threshold of movement</span></span>
+<span>  <span class="va">scaled_sed_transport</span> <span class="op">&lt;-</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_min</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span></span>
+<span>  </span>
+<span>  <span class="co"># create an approxfun given a threshold of movement (this value will be searched by the optim function)</span></span>
+<span>  <span class="va">calib_sed_curve</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span><span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>                               <span class="va">scaled_sed_transport</span> <span class="op">*</span> </span>
+<span>                                 <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">threshold</span>, <span class="co"># &lt;----- this value is searched </span></span>
+<span>                                     <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># convert square meters to cubic feet, assume 2ft depth</span></span>
+<span>  <span class="va">starting_volume</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">254690.3</span> <span class="op">*</span> <span class="fl">10.764</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span></span>
+<span>  </span>
+<span>  <span class="va">calib_kwk_sed_transport</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>    date <span class="op">=</span> <span class="va">kwk_usgs</span><span class="op">$</span><span class="va">Date</span>, </span>
+<span>    flow <span class="op">=</span> <span class="va">kwk_usgs</span><span class="op">$</span><span class="va">Flow</span>, </span>
+<span>    sediment_transport_f3_day <span class="op">=</span> <span class="fu">calib_sed_curve</span><span class="op">(</span><span class="va">flow</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">mutate</span><span class="op">(</span>sediment_transport_f3_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">sediment_transport_f3_day</span><span class="op">)</span>, <span class="fl">0</span>, <span class="va">sediment_transport_f3_day</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class="va">calib_kwk_sed_transport_sim</span> <span class="op">&lt;-</span> <span class="va">calib_kwk_sed_transport</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="st">"2015-01-01"</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2017-04-01"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>    <span class="fu">mutate</span><span class="op">(</span>sediment_transport_f3_day_accum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">sediment_transport_f3_day</span><span class="op">)</span>,</span>
+<span>           current_vol <span class="op">=</span> <span class="va">starting_volume</span> <span class="op">-</span> <span class="va">sediment_transport_f3_day_accum</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># get the last value for volume</span></span>
+<span>  <span class="va">last_volume</span> <span class="op">&lt;-</span> <span class="va">calib_kwk_sed_transport_sim</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">tail</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">pull</span><span class="op">(</span><span class="va">current_vol</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># return absolute distance to zero</span></span>
+<span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">abs</a></span><span class="op">(</span><span class="va">last_volume</span> <span class="op">-</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span></span>
+<span><span class="co"># We want to optimize the function by the threshold value that results</span></span>
+<span><span class="co"># in the volumne nearest zero.</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/optimize.html" class="external-link">optimise</a></span><span class="op">(</span><span class="va">objective_func</span>, interval <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">1</span><span class="op">)</span>, maximum <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+<p>The <code>optimise</code> function returns: Scale-down value:
+<strong>0.5099701</strong>, which gets us within
+<strong>177.844</strong> cubic feet of zero. We can evaluate this fit by
+plotting both the flow and volume decay on the same axis.</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sac_river_observation_scaledown</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">minimum</span></span>
+<span></span>
+<span><span class="co"># create a new curve with this scaledown applied</span></span>
+<span><span class="va">flow_cfs_to_sed_cfd_calibrated</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_min</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span> <span class="op">*</span> </span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="va">sac_river_observation_scaledown</span>, </span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">calibrated_kwk_sed_transport</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  date <span class="op">=</span> <span class="va">kwk_usgs</span><span class="op">$</span><span class="va">Date</span>, </span>
+<span>  flow <span class="op">=</span> <span class="va">kwk_usgs</span><span class="op">$</span><span class="va">Flow</span>, </span>
+<span>  sediment_transport_f3_day <span class="op">=</span> <span class="fu">flow_cfs_to_sed_cfd_calibrated</span><span class="op">(</span><span class="va">flow</span><span class="op">)</span></span>
+<span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>sediment_transport_f3_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">sediment_transport_f3_day</span><span class="op">)</span>, <span class="fl">0</span>, <span class="va">sediment_transport_f3_day</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">starting_volume</span> <span class="op">&lt;-</span> <span class="op">(</span><span class="fl">254690.3</span> <span class="op">*</span> <span class="fl">10.764</span><span class="op">)</span> <span class="op">*</span> <span class="fl">2</span></span>
+<span></span>
+<span><span class="va">kwk_sed_transport_sim</span> <span class="op">&lt;-</span> <span class="va">calibrated_kwk_sed_transport</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">date</span> <span class="op">&gt;=</span> <span class="st">"2015-01-01"</span>, <span class="va">date</span> <span class="op">&lt;=</span> <span class="st">"2017-04-01"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>sediment_transport_f3_day <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">sediment_transport_f3_day</span><span class="op">)</span>, <span class="fl">0</span>, <span class="va">sediment_transport_f3_day</span><span class="op">)</span>, </span>
+<span>         sediment_transport_f3_day_accum <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cumsum.html" class="external-link">cumsum</a></span><span class="op">(</span><span class="va">sediment_transport_f3_day</span><span class="op">)</span>,</span>
+<span>         start_vol <span class="op">=</span> <span class="va">starting_volume</span>,</span>
+<span>         current_vol <span class="op">=</span> <span class="va">start_vol</span> <span class="op">-</span> <span class="va">sediment_transport_f3_day_accum</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="va">kwk_sed_transport_sim</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">date</span>, <span class="va">current_vol</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">"Spawning Habitat Vol. (cubic feet)"</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="va">kwk_usgs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Date</span> <span class="op">&gt;=</span> <span class="st">"2015-01-01"</span>, <span class="va">Date</span> <span class="op">&lt;=</span> <span class="st">"2017-04-01"</span><span class="op">)</span> <span class="op">|&gt;</span> <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">Date</span>, <span class="va">Flow</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># plot to confirm scaledown did the right thing</span></span>
+<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">p2</span>, <span class="va">p1</span>, nrow <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
+<div class="section level4">
+<h4 id="second-update-to-the-transport-curves">Second update to the transport curves<a class="anchor" aria-label="anchor" href="#second-update-to-the-transport-curves"></a>
+</h4>
+<p>At this point, we can apply both scale-downs (gravel size and
+observed) to update our current transport curves. To do this, we simply
+apply both scale-downs in the function generation call to
+<code>approxfun</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">min_sfd_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_min</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span> <span class="op">*</span> <span class="va">result</span><span class="op">$</span><span class="va">minimum</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">avg_sfd_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_avg</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span> <span class="op">*</span> <span class="va">result</span><span class="op">$</span><span class="va">minimum</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">max_sfd_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/approxfun.html" class="external-link">approxfun</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  y <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">sed_ft3_per_day_max</span> <span class="op">*</span> </span>
+<span>    <span class="va">gravel_size_to_prop_of_movement</span><span class="op">$</span><span class="va">avg_fraction</span> <span class="op">*</span> <span class="va">result</span><span class="op">$</span><span class="va">minimum</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">min_sfd_with_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  flow_cfs <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  transport_cfd <span class="op">=</span> <span class="fu">min_sfd_gravel_obs</span><span class="op">(</span><span class="va">flow_cfs</span><span class="op">)</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">"min"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">avg_sfd_with_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  flow_cfs <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  transport_cfd <span class="op">=</span> <span class="fu">avg_sfd_gravel_obs</span><span class="op">(</span><span class="va">flow_cfs</span><span class="op">)</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">"mean"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">max_sfd_with_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  flow_cfs <span class="op">=</span> <span class="va">srh2d_upper_sac_rating_curves</span><span class="op">$</span><span class="va">flow_cfs</span>, </span>
+<span>  transport_cfd <span class="op">=</span> <span class="fu">max_sfd_gravel_obs</span><span class="op">(</span><span class="va">flow_cfs</span><span class="op">)</span>, </span>
+<span>  type <span class="op">=</span> <span class="st">"max"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">transport_scaled_by_gravel_obs</span> <span class="op">&lt;-</span> <span class="fu">bind_rows</span><span class="op">(</span></span>
+<span>  <span class="va">min_sfd_with_gravel_obs</span>, </span>
+<span>  <span class="va">avg_sfd_with_gravel_obs</span>, </span>
+<span>  <span class="va">max_sfd_with_gravel_obs</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="va">transport_scaled_by_gravel_obs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">flow_cfs</span>, <span class="va">transport_cfd</span>, color<span class="op">=</span><span class="va">type</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_line</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">geom_point</span><span class="op">(</span>size <span class="op">=</span> <span class="fl">2.5</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va"><a href="https://scales.r-lib.org/reference/comma.html" class="external-link">comma</a></span><span class="op">)</span></span></code></pre></div>
+<p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
+</div>
 </div>
 </div>
   </div>

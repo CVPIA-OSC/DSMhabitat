@@ -564,6 +564,653 @@ apply both scale-downs in the function generation call to
 <p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-11-1.png" width="700"></p>
 </div>
 </div>
+<div class="section level3">
+<h3 id="experts-based-scale-down">Experts based scale-down<a class="anchor" aria-label="anchor" href="#experts-based-scale-down"></a>
+</h3>
+<p>The last series of scale-downs were developed with the help of John
+Hannon and Chris Hammersmark, both of whom are recognized as experts in
+the hydrology of the Upper Sacramento River. We evaluated the existing
+scale-downs and found that it was necessary to implement an additional
+set of reductions to account for gravel deposition This analysis
+involved the addition of augmentations, which will be explained in more
+detail in the following section.</p>
+<div class="section level4">
+<h4 id="augmentation-data">Augmentation Data<a class="anchor" aria-label="anchor" href="#augmentation-data"></a>
+</h4>
+<p>To correctly evaluate the scale-downs, it is important to examine the
+augmentations that were performed in the Upper Sacramento River DSM
+watershed. We collected augmentations from John Hannon and augmentations
+listed in the Stillwater report dating back to 1978, and consolidated
+the data into total acres per year. A 2-foot depth was assumed in order
+to convert the information from tons.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># combine both John Hannon's data and augmentations from Stillwater report</span></span>
+<span><span class="va">sac_augmentation_totals</span> <span class="op">&lt;-</span></span>
+<span>  <span class="va">upper_sac_augmentations</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">summarise</span><span class="op">(</span>tons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">tons</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span></span>
+<span>    date <span class="op">=</span> <span class="fu">as_date</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"-01-31"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    cubic_yard <span class="op">=</span> <span class="va">tons</span> <span class="op">/</span> <span class="fl">1.5</span>, </span>
+<span>    cubic_feet <span class="op">=</span> <span class="va">cubic_yard</span> <span class="op">*</span> <span class="fl">27</span>,</span>
+<span>    sq_feet <span class="op">=</span> <span class="va">cubic_feet</span> <span class="op">/</span> <span class="fl">2</span>, </span>
+<span>    acres <span class="op">=</span> <span class="va">sq_feet</span> <span class="op">/</span> <span class="fl">43560</span>,</span>
+<span>    source <span class="op">=</span> <span class="st">"H"</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">date</span>, <span class="va">acres</span>, <span class="va">source</span><span class="op">)</span> <span class="op">|&gt;</span>  </span>
+<span>  <span class="fu">bind_rows</span><span class="op">(</span><span class="va">stillwater_sac_augmentations</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">arrange</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">acres</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="fu">gt</span><span class="op">(</span><span class="va">sac_augmentation_totals</span> <span class="op">|&gt;</span> <span class="fu">transmute</span><span class="op">(</span>Year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/format.html" class="external-link">format</a></span><span class="op">(</span><span class="va">date</span>, <span class="st">"%Y"</span><span class="op">)</span>, Acres <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">acres</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tab_header</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Compiled Upper Sacramento Augmentations (1978-2022)"</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">tab_footnote</span><span class="op">(</span>footnote <span class="op">=</span> <span class="st">"data was converted from tons to acres, assuming a 2ft depth"</span><span class="op">)</span> </span></code></pre></div>
+<div id="borzehitvj" style="overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>html {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', 'Fira Sans', 'Droid Sans', Arial, sans-serif;
+}
+
+#borzehitvj .gt_table {
+  display: table;
+  border-collapse: collapse;
+  margin-left: auto;
+  margin-right: auto;
+  color: #333333;
+  font-size: 16px;
+  font-weight: normal;
+  font-style: normal;
+  background-color: #FFFFFF;
+  width: auto;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #A8A8A8;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #A8A8A8;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+}
+
+#borzehitvj .gt_heading {
+  background-color: #FFFFFF;
+  text-align: center;
+  border-bottom-color: #FFFFFF;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#borzehitvj .gt_title {
+  color: #333333;
+  font-size: 125%;
+  font-weight: initial;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-color: #FFFFFF;
+  border-bottom-width: 0;
+}
+
+#borzehitvj .gt_subtitle {
+  color: #333333;
+  font-size: 85%;
+  font-weight: initial;
+  padding-top: 0;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-color: #FFFFFF;
+  border-top-width: 0;
+}
+
+#borzehitvj .gt_bottom_border {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#borzehitvj .gt_col_headings {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+}
+
+#borzehitvj .gt_col_heading {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 6px;
+  padding-left: 5px;
+  padding-right: 5px;
+  overflow-x: hidden;
+}
+
+#borzehitvj .gt_column_spanner_outer {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: normal;
+  text-transform: inherit;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+#borzehitvj .gt_column_spanner_outer:first-child {
+  padding-left: 0;
+}
+
+#borzehitvj .gt_column_spanner_outer:last-child {
+  padding-right: 0;
+}
+
+#borzehitvj .gt_column_spanner {
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: bottom;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  overflow-x: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+#borzehitvj .gt_group_heading {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#borzehitvj .gt_empty_group_heading {
+  padding: 0.5px;
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  vertical-align: middle;
+}
+
+#borzehitvj .gt_from_md > :first-child {
+  margin-top: 0;
+}
+
+#borzehitvj .gt_from_md > :last-child {
+  margin-bottom: 0;
+}
+
+#borzehitvj .gt_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  margin: 10px;
+  border-top-style: solid;
+  border-top-width: 1px;
+  border-top-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 1px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 1px;
+  border-right-color: #D3D3D3;
+  vertical-align: middle;
+  overflow-x: hidden;
+}
+
+#borzehitvj .gt_stub {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#borzehitvj .gt_stub_row_group {
+  color: #333333;
+  background-color: #FFFFFF;
+  font-size: 100%;
+  font-weight: initial;
+  text-transform: inherit;
+  border-right-style: solid;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: top;
+}
+
+#borzehitvj .gt_row_group_first td {
+  border-top-width: 2px;
+}
+
+#borzehitvj .gt_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#borzehitvj .gt_first_summary_row {
+  border-top-style: solid;
+  border-top-color: #D3D3D3;
+}
+
+#borzehitvj .gt_first_summary_row.thick {
+  border-top-width: 2px;
+}
+
+#borzehitvj .gt_last_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#borzehitvj .gt_grand_summary_row {
+  color: #333333;
+  background-color: #FFFFFF;
+  text-transform: inherit;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#borzehitvj .gt_first_grand_summary_row {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-top-style: double;
+  border-top-width: 6px;
+  border-top-color: #D3D3D3;
+}
+
+#borzehitvj .gt_striped {
+  background-color: rgba(128, 128, 128, 0.05);
+}
+
+#borzehitvj .gt_table_body {
+  border-top-style: solid;
+  border-top-width: 2px;
+  border-top-color: #D3D3D3;
+  border-bottom-style: solid;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+}
+
+#borzehitvj .gt_footnotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#borzehitvj .gt_footnote {
+  margin: 0px;
+  font-size: 90%;
+  padding-left: 4px;
+  padding-right: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#borzehitvj .gt_sourcenotes {
+  color: #333333;
+  background-color: #FFFFFF;
+  border-bottom-style: none;
+  border-bottom-width: 2px;
+  border-bottom-color: #D3D3D3;
+  border-left-style: none;
+  border-left-width: 2px;
+  border-left-color: #D3D3D3;
+  border-right-style: none;
+  border-right-width: 2px;
+  border-right-color: #D3D3D3;
+}
+
+#borzehitvj .gt_sourcenote {
+  font-size: 90%;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+#borzehitvj .gt_left {
+  text-align: left;
+}
+
+#borzehitvj .gt_center {
+  text-align: center;
+}
+
+#borzehitvj .gt_right {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+#borzehitvj .gt_font_normal {
+  font-weight: normal;
+}
+
+#borzehitvj .gt_font_bold {
+  font-weight: bold;
+}
+
+#borzehitvj .gt_font_italic {
+  font-style: italic;
+}
+
+#borzehitvj .gt_super {
+  font-size: 65%;
+}
+
+#borzehitvj .gt_footnote_marks {
+  font-style: italic;
+  font-weight: normal;
+  font-size: 75%;
+  vertical-align: 0.4em;
+}
+
+#borzehitvj .gt_asterisk {
+  font-size: 100%;
+  vertical-align: 0;
+}
+
+#borzehitvj .gt_indent_1 {
+  text-indent: 5px;
+}
+
+#borzehitvj .gt_indent_2 {
+  text-indent: 10px;
+}
+
+#borzehitvj .gt_indent_3 {
+  text-indent: 15px;
+}
+
+#borzehitvj .gt_indent_4 {
+  text-indent: 20px;
+}
+
+#borzehitvj .gt_indent_5 {
+  text-indent: 25px;
+}
+</style>
+<table class="table gt_table">
+<thead class="gt_header"><tr>
+<td colspan="2" class="gt_heading gt_title gt_font_normal gt_bottom_border" style>Compiled Upper Sacramento Augmentations (1978-2022)</td>
+    </tr></thead>
+<thead class="gt_col_headings"><tr>
+<th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Year</th>
+      <th class="gt_col_heading gt_columns_bottom_border gt_right" rowspan="1" colspan="1" scope="col">Acres</th>
+    </tr></thead>
+<tbody class="gt_table_body">
+<tr>
+<td class="gt_row gt_right">1978</td>
+<td class="gt_row gt_right">1.43</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1979</td>
+<td class="gt_row gt_right">2.70</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1988</td>
+<td class="gt_row gt_right">4.96</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1989</td>
+<td class="gt_row gt_right">2.48</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1990</td>
+<td class="gt_row gt_right">30.97</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1997</td>
+<td class="gt_row gt_right">6.40</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1998</td>
+<td class="gt_row gt_right">4.75</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">1999</td>
+<td class="gt_row gt_right">5.17</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2000</td>
+<td class="gt_row gt_right">6.61</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2002</td>
+<td class="gt_row gt_right">3.10</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2003</td>
+<td class="gt_row gt_right">1.82</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2004</td>
+<td class="gt_row gt_right">1.76</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2005</td>
+<td class="gt_row gt_right">1.49</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2006</td>
+<td class="gt_row gt_right">1.24</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2007</td>
+<td class="gt_row gt_right">1.24</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2008</td>
+<td class="gt_row gt_right">1.71</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2009</td>
+<td class="gt_row gt_right">2.05</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2010</td>
+<td class="gt_row gt_right">1.14</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2011</td>
+<td class="gt_row gt_right">1.03</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2012</td>
+<td class="gt_row gt_right">3.10</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2013</td>
+<td class="gt_row gt_right">2.89</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2014</td>
+<td class="gt_row gt_right">0.00</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2015</td>
+<td class="gt_row gt_right">0.00</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2016</td>
+<td class="gt_row gt_right">6.61</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2017</td>
+<td class="gt_row gt_right">2.89</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2018</td>
+<td class="gt_row gt_right">0.00</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2019</td>
+<td class="gt_row gt_right">6.61</td>
+</tr>
+<tr>
+<td class="gt_row gt_right">2022</td>
+<td class="gt_row gt_right">4.13</td>
+</tr>
+</tbody>
+<tfoot class="gt_footnotes"><tr>
+<td class="gt_footnote" colspan="2"> data was converted from tons to acres, assuming a 2ft depth</td>
+    </tr></tfoot>
+</table>
+</div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">sac_augmentation_totals</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>year <span class="op">=</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">year</span>, <span class="va">acres</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1978</span>, <span class="fl">2022</span>, by <span class="op">=</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">90</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> </span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div>
+<p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-14-1.png" width="700"></p>
+</div>
+<div class="section level4">
+<h4 id="augmentation-and-decay">Augmentation and Decay<a class="anchor" aria-label="anchor" href="#augmentation-and-decay"></a>
+</h4>
+<p>In this section, we utilize the decay curve that we have constructed
+up to this point, along with DSM flows, to predict decay. The resulting
+time series is then analyzed, and additional scale-downs are determined
+based on expert opinions. Discussions have indicated that, taking
+augmentations and decays into consideration, it is estimated that there
+will be approximately 2 acres of decay per year on average. As a result,
+an additional scale-down factor of .19 will be applied as the final
+scale-down.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Use DSM flows to determine decay</span></span>
+<span><span class="va">upper_sac_flows_dsm</span> <span class="op">&lt;-</span> <span class="fu">DSMflow</span><span class="fu">::</span><span class="va"><a href="https://cvpia-osc.github.io/DSMflow/reference/flows_cfs.html" class="external-link">flows_cfs</a></span><span class="op">$</span><span class="va">biop_2008_2009</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">&gt;=</span> <span class="fl">1979</span>, <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span> <span class="op">&lt;=</span> <span class="fl">2000</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">select</span><span class="op">(</span><span class="va">date</span>, flow <span class="op">=</span> <span class="va">`Upper Sacramento River`</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># combine decay and calculate acres</span></span>
+<span><span class="va">upper_sac_decay</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span></span>
+<span>  date <span class="op">=</span> <span class="va">upper_sac_flows_dsm</span><span class="op">$</span><span class="va">date</span>,</span>
+<span>  flow <span class="op">=</span> <span class="va">upper_sac_flows_dsm</span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  decay_cfd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span></span>
+<span>    <span class="op">(</span><span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">min_sfd_gravel_obs</span><span class="op">(</span><span class="va">flow</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    <span class="fl">0</span>, <span class="va">x</span></span>
+<span>  <span class="op">)</span>,</span>
+<span>  decay_cfm <span class="op">=</span> <span class="va">decay_cfd</span> <span class="op">*</span> <span class="fu">days_in_month</span><span class="op">(</span><span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>  decay_sqm <span class="op">=</span> <span class="va">decay_cfm</span> <span class="op">/</span> <span class="fl">2</span>,</span>
+<span>  decay_acres_month <span class="op">=</span> <span class="va">decay_sqm</span> <span class="op">/</span> <span class="fl">43560</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># scale-down to achieve annual average decay of 2 acres</span></span>
+<span><span class="va">domain_expert_additional_scaledown</span> <span class="op">&lt;-</span> <span class="fl">.19</span></span>
+<span></span>
+<span><span class="va">decays</span> <span class="op">&lt;-</span> <span class="va">upper_sac_decay</span> <span class="op">|&gt;</span> <span class="fu">select</span><span class="op">(</span><span class="va">date</span>, <span class="va">decay_acres_month</span>, <span class="va">flow</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>scaled_decay <span class="op">=</span> <span class="va">decay_acres_month</span> <span class="op">*</span> <span class="va">domain_expert_additional_scaledown</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">augmentations</span> <span class="op">&lt;-</span> <span class="va">sac_augmentation_totals</span> <span class="op">|&gt;</span> <span class="fu">select</span><span class="op">(</span><span class="va">date</span>, aug_acres<span class="op">=</span><span class="va">acres</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">decays_and_augs</span> <span class="op">&lt;-</span> <span class="va">decays</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">left_join</span><span class="op">(</span><span class="va">sac_augmentation_totals</span>, by<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"date"</span><span class="op">=</span><span class="st">"date"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">mutate</span><span class="op">(</span>acres <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/ifelse.html" class="external-link">ifelse</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">acres</span><span class="op">)</span>, <span class="fl">0</span>, <span class="va">acres</span><span class="op">)</span>,</span>
+<span>         aug_minus_decay <span class="op">=</span> <span class="va">acres</span> <span class="op">-</span> <span class="va">decay_acres_month</span>,</span>
+<span>         aug_minus_decay_scaled <span class="op">=</span> <span class="va">acres</span> <span class="op">-</span> <span class="va">scaled_decay</span>,</span>
+<span>         month <span class="op">=</span> <span class="fu">month</span><span class="op">(</span><span class="va">date</span><span class="op">)</span>,</span>
+<span>         year <span class="op">=</span> <span class="fu">year</span><span class="op">(</span><span class="va">date</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">decays_and_augs</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">group_by</span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">summarise</span><span class="op">(</span></span>
+<span>    avg_diff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">aug_minus_decay_scaled</span><span class="op">)</span>,</span>
+<span>    sum_loss <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">aug_minus_decay_scaled</span><span class="op">)</span></span>
+<span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu">pull</span><span class="op">(</span><span class="va">sum_loss</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] -1.967822</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">decays_and_augs</span> <span class="op">|&gt;</span> </span>
+<span>  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">date</span>, <span class="va">aug_minus_decay_scaled</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">""</span>, y <span class="op">=</span> <span class="st">"Augmentation minus Decay (acres)"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="flow-driven-spawning-decay_files/figure-html/unnamed-chunk-16-1.png" width="700"></p>
+</div>
+</div>
 </div>
   </div>
 

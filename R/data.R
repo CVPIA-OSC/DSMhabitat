@@ -948,9 +948,6 @@ NULL
 "prob_nest_scoured"
 
 
-#' @title Gravel size to proportion of movement
-"gravel_size_to_prop_of_movement"
-
 #' @title Watershed Decay Status
 #' @description Watershed to TRUE/FALSE lookup indicating whether habitat decay occurs.
 "watershed_decay_status"

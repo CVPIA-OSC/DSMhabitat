@@ -19,14 +19,11 @@ gravel_size_to_prop_of_movement <- gravel_size_scaledown |>
     max_fraction = max(fraction)
   ) 
 
-usethis::use_data(gravel_size_to_prop_of_movement, overwrite = TRUE)
-
 head(gravel_size_to_prop_of_movement)
 
 files_to_read <- list.files("data-raw/spawning-habitat-decay/data/SedimentRatingCurves/",
                             pattern = ".txt",
                             full.names = TRUE)
-
 
 rating_curves_by_rm <- map_df(files_to_read, function(x) {
   river_mile <- str_match(x, "[0-9]+\\.?[0-9]+")[,1]
@@ -79,8 +76,6 @@ srh2d_upper_sac_rating_curves <- rating_curve |>
           sed_ft3_per_second_avg = 0, 
           sed_ft3_per_second_max = 0
   )
-
-usethis::use_data(srh2d_upper_sac_rating_curves, overwrite = TRUE)
 
 srh2d_upper_sac_rating_curves %>% 
   pivot_longer(names_to = "curve", 
@@ -154,7 +149,7 @@ sac_river_observation_scaledown <- result$minimum
 
 # create a new curve with this scaledown applied
 flow_cfs_to_sed_cfd_calibrated <- approxfun(
-  x = rating_curve$flow_cfs, 
+  x = srh$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_min * 
     DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
     rep(sac_river_observation_scaledown, 
@@ -254,7 +249,7 @@ sac_aug_totals <-
 gt(sac_aug_totals |> select(-source))
 
 decays <- upper_sac_decay |> select(date, decay_acres_month, flow) |> 
-  mutate(scaled_decay = decay_acres_month * .195)
+  mutate(scaled_decay = decay_acres_month * .18)
 
 augmentations <- sac_aug_totals |> select(date, aug_acres=acres) 
 
@@ -275,7 +270,7 @@ decays_and_augs |>
   pull(sum_loss) |> 
   mean()
 
-domain_expert_additional_scaledown <- .13
+domain_expert_additional_scaledown <- .18
 total_scaledown <- domain_expert_additional_scaledown * sac_river_observation_scaledown
 
 
@@ -303,7 +298,7 @@ MAX_flow_cfs_to_sed_cfd_final <- approxfun(
 )
 
 # Exceedance probs --------------------------------------
-dsm_flows <- DSMflow::flows_cfs$biop_itp_2018_2019 |> 
+dsm_flows <- DSMflow::flows_cfs$biop_2008_2009 |> 
   pivot_longer(cols = -date, names_to = "watershed", values_to = "flow_cfs")
 
 watersheds_with_decay <- names(which(DSMhabitat::watershed_decay_status))

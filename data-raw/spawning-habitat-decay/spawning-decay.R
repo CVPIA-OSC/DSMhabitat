@@ -110,7 +110,7 @@ objective_func <- function(threshold) {
   
   # scale down the tranport curves to just the d50mm threshold of movement
   scaled_sed_transport <- rating_curve$sed_ft3_per_day_min * 
-    DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction
+    gravel_size_to_prop_of_movement$avg_fraction
   
   # create an approxfun given a threshold of movement (this value will be searched by the optim function)
   calib_sed_curve <- approxfun(rating_curve$flow_cfs, 
@@ -149,9 +149,9 @@ sac_river_observation_scaledown <- result$minimum
 
 # create a new curve with this scaledown applied
 flow_cfs_to_sed_cfd_calibrated <- approxfun(
-  x = srh$flow_cfs, 
+  x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_min * 
-    DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
+    gravel_size_to_prop_of_movement$avg_fraction * 
     rep(sac_river_observation_scaledown, 
         length(rating_curve$flow_cfs))
 )
@@ -279,21 +279,21 @@ total_scaledown <- domain_expert_additional_scaledown * sac_river_observation_sc
 MIN_flow_cfs_to_sed_cfd_final <- approxfun(
   x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_min * 
-    DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
+    gravel_size_to_prop_of_movement$avg_fraction * 
     total_scaledown
 )
 
 AVG_flow_cfs_to_sed_cfd_final <- approxfun(
   x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_avg * 
-    DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
+    gravel_size_to_prop_of_movement$avg_fraction * 
     total_scaledown
 )
 
 MAX_flow_cfs_to_sed_cfd_final <- approxfun(
   x = rating_curve$flow_cfs, 
   y = rating_curve$sed_ft3_per_day_max * 
-    DSMhabitat::gravel_size_to_prop_of_movement$avg_fraction * 
+    gravel_size_to_prop_of_movement$avg_fraction * 
     total_scaledown
 )
 
@@ -365,6 +365,7 @@ watershed_spawning_decays$`American River` |>
   mutate(agg_decay = cumsum(-decay_acres_month)) |> 
   ggplot(aes(date, agg_decay, color = decay_type)) + geom_line()
 
+# adjust the curve to be used by each of the watersheds
 watershed_decay_level_lookups <- c(
   `Upper Sacramento River` = "min", `Antelope Creek` = "none", 
   `Battle Creek` = "none", `Bear Creek` = "none", `Big Chico Creek` = "none", 
@@ -386,7 +387,7 @@ spawning_decay_multiplier <- vector(mode = "list")
 
 watersheds_with_decay <- names(which(DSMhabitat::watershed_decay_status))
 
-fall_run_spawning_decay_mult <- purrr::map(names(watershed_decay_level_lookups), function(w) {
+spawning_decay_mult <- purrr::map(names(watershed_decay_level_lookups), function(w) {
   if (w %in% watersheds_with_decay) {
     decay <- watershed_spawning_decays[[w]] |> 
       dplyr::filter(decay_type == watershed_decay_level_lookups[w]) |> 
@@ -405,20 +406,20 @@ fall_run_spawning_decay_mult <- purrr::map(names(watershed_decay_level_lookups),
 }) |> 
   setNames(names(watershed_decay_level_lookups))
 
-fr_spawning_decay_array <- array(data = NA, dim = c(31, 12, 22), 
+spawning_decay_array <- array(data = NA, dim = c(31, 12, 22), 
                                  dimnames = list(fallRunDSM::watershed_labels, 
                                                  month.abb,
                                                  1979:2000))
 
 # fill in the array 31(watersheds) X 22(years) X 12(months)
 for (i in 1:31) {
-  fr_spawning_decay_array[i, , ] <- fall_run_spawning_decay_mult[[i]]
+  spawning_decay_array[i, , ] <- spawning_decay_mult[[i]]
 }
 
-spawning_decay_multiplier$fr <- fr_spawning_decay_array
+spawning_decay_multiplier <- spawning_decay_array
 
 
-fall_run_spawning_decay_mult$`Upper Sacramento River`
+spawning_decay_mult$`Upper Sacramento River`
 
 usethis::use_data(spawning_decay_multiplier, overwrite = TRUE)
 

@@ -961,8 +961,8 @@ NULL
 "watershed_spawning_decays"
 
 #' @title Spawning Decay Multipliers
-#' @description List of multiplier matrices to be used as decay per month and year for Spawning Habitat.
-#' @details this decay multiplier only exists for Fall-run, Spring and Winter run models rely on probabilistic spawning habitat decay.
+#' @description multiplier array to be used as decay per month and year for Spawning Habitat.
+#' @details this decay multiplier is to be used for Fall-run, Spring and Winter run models.
 #' @format array 31x22x12
 "spawning_decay_multiplier"
 

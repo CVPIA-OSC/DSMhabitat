@@ -277,23 +277,23 @@ total_scaledown <- domain_expert_additional_scaledown * sac_river_observation_sc
 # Apply to all watersheds -----------------------------
 
 MIN_flow_cfs_to_sed_cfd_final <- approxfun(
-  x = rating_curve$flow_cfs, 
-  y = rating_curve$sed_ft3_per_day_min * 
-    gravel_size_to_prop_of_movement$avg_fraction * 
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_min * 
+    c(gravel_size_to_prop_of_movement$avg_fraction, 0) * 
     total_scaledown
 )
 
 AVG_flow_cfs_to_sed_cfd_final <- approxfun(
-  x = rating_curve$flow_cfs, 
-  y = rating_curve$sed_ft3_per_day_avg * 
-    gravel_size_to_prop_of_movement$avg_fraction * 
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_avg * 
+    c(gravel_size_to_prop_of_movement$avg_fraction, 0) * 
     total_scaledown
 )
 
 MAX_flow_cfs_to_sed_cfd_final <- approxfun(
-  x = rating_curve$flow_cfs, 
-  y = rating_curve$sed_ft3_per_day_max * 
-    gravel_size_to_prop_of_movement$avg_fraction * 
+  x = srh2d_upper_sac_rating_curves$flow_cfs, 
+  y = srh2d_upper_sac_rating_curves$sed_ft3_per_day_max * 
+    c(gravel_size_to_prop_of_movement$avg_fraction, 0) * 
     total_scaledown
 )
 
@@ -417,9 +417,6 @@ for (i in 1:31) {
 }
 
 spawning_decay_multiplier <- spawning_decay_array
-
-
-spawning_decay_mult$`Upper Sacramento River`
 
 usethis::use_data(spawning_decay_multiplier, overwrite = TRUE)
 
